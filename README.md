@@ -73,21 +73,22 @@ flask run
 |:---:|:---|:--|:--|
 | id | true | int | 表格id |
 | main_key | true | str | 主key |
+
 #### 返回结果示例
 **示例**
-  ```
+```
   post: {
-    id=0，
+    id=0,
     main_key='证件号码'
   }
   return：'success'
-
+```
 
 ### 筛选
 - 127.0.0.1:5000/funnel
 #### method： POST
 #### 请求参数--JSON
-```json
+```
 "condition": [
   {
 	  "id": 表格id,
@@ -103,6 +104,7 @@ flask run
 "num": 返回数量
 }
 ```
+
 #### 请求示例
 ```json
 {
@@ -165,7 +167,7 @@ flask run
 - 127.0.0.1:5000/diff
 #### method： POST
 #### 请求参数--JSON
-```json
+```
 "ids": [
   一系列id,
   ...
