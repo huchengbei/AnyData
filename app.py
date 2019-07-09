@@ -18,9 +18,9 @@ def hello_world():
     return 'Hello World!'
 
 
-@app.route('/reset')
+@app.route('/reset', methods=['POST'])
 def reset():
-    app.table = None
+    app.tables = []
     return 'success'
 
 
