@@ -26,11 +26,17 @@ def reset():
 
 @app.route('/load_data', methods=['POST'])
 def load_data():
+    print(request.form)
+    print(request.args)
     if request.method == 'POST':
         path = request.form['path']
         table = Table(path)
         app.tables += [table]
-        return 'success'
+        id = len(app.tables) - 1
+        return json.dumps({
+            "id": id,
+            "column_list": table.get_column_list()
+        })
     return 'error'
 
 
@@ -108,7 +114,7 @@ def funnel():
         response_data['total'] = total
         response_data['next_start'] = end
         response_data['column_list'] = common_column
-        response_data['data'] = result.to_dict('index')
+        response_data['data'] = result.to_dict('records')
         response_data['column_list'] = common_column
 
         return json.dumps(response_data)
@@ -183,11 +189,12 @@ def diff():
         response_data['total'] = total
         response_data['next_start'] = end
         response_data['column_list'] = new_columns
-        response_data['data'] = result_all[start:end].to_dict('index')
+        response_data['data'] = result_all[start:end].to_dict('records')
 
         return json.dumps(response_data)
     return 'error'
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
+    # app.run()
