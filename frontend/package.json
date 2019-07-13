@@ -54,7 +54,6 @@
     "element-ui": "2.10.1",
     "qs": "^6.7.0",
     "vue": "^2.6.10",
-    "vue-router": "^3.0.7",
     "vueify": "^9.4.1"
   },
   "devDependencies": {
