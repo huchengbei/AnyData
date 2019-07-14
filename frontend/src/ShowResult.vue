@@ -24,7 +24,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      optration: '',
+      operation: '',
       loading: true,
       column_list: [],
       tableData: [
@@ -84,9 +84,9 @@ export default {
       if (start < 0) {
         start = 0;
       }
-      if(this.optration === 'funnel'){
+      if(this.operation === 'funnel'){
         this.funnel(start, num);
-      }else if(this.optration === 'diff'){
+      }else if(this.operation === 'diff'){
         this.diff(start, num);
       }
     },
@@ -96,17 +96,17 @@ export default {
       var num = this.post_data.num;
       var start = this.post_data.start + num;
       console.log("post start start", start)
-      if(this.optration === 'funnel'){
+      if(this.operation === 'funnel'){
         this.funnel(start, num);
-      }else if(this.optration === 'diff'){
+      }else if(this.operation === 'diff'){
         this.diff(start, num);
       }
     }
   },
   mounted: function(){
-    if(this.optration === 'funnel'){
+    if(this.operation === 'funnel'){
       this.funnel();
-    }else if(this.optration === 'diff'){
+    }else if(this.operation === 'diff'){
       this.diff();
     }
   }

@@ -48,26 +48,26 @@
 
 <script>
 export default {
-    name: 'chooseOptration',
+    name: 'chooseOperation',
     data() {
       return {
         funnel_hidden: true,
         diff_hidden: true,
-        optration: '',
+        operation: '',
      }
     },
     methods: {
       choose_funnel() {
         this.funnel_hidden=false;
         this.diff_hidden=true;
-        this.optration="funnel";
+        this.operation="funnel";
       },
       choose_diff() {
         this.funnel_hidden=true;
         this.diff_hidden=false;
-        this.optration="diff";
+        this.operation="diff";
       },
-      check_optration(){
+      check_operation(){
         return this.funnel_hidden || this.diff_hidden;
       }
     }

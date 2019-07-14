@@ -83,7 +83,7 @@ import Vue from 'vue';
 import ElementUI from 'element-ui';
 Vue.use(ElementUI)
 import ChooseFile from './ChooseFile';
-import ChooseOptration from './ChooseOptration';
+import ChooseOperation from './ChooseOperation';
 import ChooseTable from './ChooseTable';
 import ShowResult from './ShowResult.vue';
 export default {
@@ -93,9 +93,9 @@ export default {
         files: [],
         header: 'Header',
         step: 1,
-        optration: '',
+        operation: '',
         chooseFile: '',
-        chooseOptration: '',
+        chooseOperation: '',
         chooseTable: '',
         showResult: '',
       }
@@ -107,10 +107,10 @@ export default {
                     alert('请选择main_key');
                 }else{
                   this.files = this.chooseFile.tableData;
-                  this.mountChooseOptration();
+                  this.mountChooseOperation();
                 }
             }else if(this.step === 2) {
-              this.optration = this.chooseOptration.optration;
+              this.operation = this.chooseOperation.operation;
               this.mountChooseTable();
             }else if(this.step === 3) {
               if(this.chooseTable.check_condition()){
@@ -124,7 +124,7 @@ export default {
               this.mountChooseFile();
               break;
             case 2:
-              this.mountChooseOptration();
+              this.mountChooseOperation();
               break;
             case 3:
               this.mountChooseTable();
@@ -137,22 +137,22 @@ export default {
           this.chooseFile.$mount('#main')
           this.step = 1;
         },
-        mountChooseOptration(){
-          if (this.chooseOptration != ''){
-              var chooseOptration = new Vue(ChooseOptration);
-              chooseOptration.funnel_hidden = this.chooseOptration.funnel_hidden;
-              chooseOptration.diff_hidden = this.chooseOptration.diff_hidden;
-              chooseOptration.optration = this.chooseOptration.optration;
-              this.chooseOptration = chooseOptration;
+        mountChooseOperation(){
+          if (this.chooseOperation != ''){
+              var chooseOperation = new Vue(ChooseOperation);
+              chooseOperation.funnel_hidden = this.chooseOperation.funnel_hidden;
+              chooseOperation.diff_hidden = this.chooseOperation.diff_hidden;
+              chooseOperation.operation = this.chooseOperation.operation;
+              this.chooseOperation = chooseOperation;
           }else{
-            this.chooseOptration = new Vue(ChooseOptration);
+            this.chooseOperation = new Vue(ChooseOperation);
           }
-          this.chooseOptration.$mount('#main')
+          this.chooseOperation.$mount('#main')
           this.step = 2;
         },
         mountChooseTable(){
           this.chooseTable = new Vue(ChooseTable);
-          this.chooseTable.optration = this.chooseOptration.optration;
+          this.chooseTable.operation = this.chooseOperation.operation;
           var tableData = this.chooseFile.tableData;
           var tables = [];
           var list = [];
@@ -175,20 +175,20 @@ export default {
           var post_data = {}
           post_data.start = 0;
           post_data.num = 10;
-          if (this.optration == 'funnel'){
+          if (this.operation == 'funnel'){
             post_data.condition = this.chooseTable.get_condition();
-          }else if (this.optration == 'diff'){
+          }else if (this.operation == 'diff'){
             post_data.ids = this.chooseTable.get_condition();
           }
           this.showResult.post_data = post_data;
-          this.showResult.optration = this.chooseOptration.optration;
+          this.showResult.operation = this.chooseOperation.operation;
           this.showResult.$mount('#main')
           this.step = 4;
         },
     },
     mounted() {
       this.mountChooseFile();
-      // this.mountChooseOptration();
+      // this.mountChooseOperation();
       // this.mountChooseTable();
       // this.mountShowResult();
     }

@@ -38,7 +38,7 @@
             <el-button type="info" @click="use_table(col)" style="margin-bottom: 10px">
               <div class="sub-title">{{col.fileName}}</div>
             </el-button>
-            <el-radio-group v-if="optration === 'funnel'" v-model="col.in">
+            <el-radio-group v-if="operation === 'funnel'" v-model="col.in">
               <el-radio
                 :disabled="col.hidden"
                 v-for="(item, index) in col.radio_options"
@@ -58,7 +58,7 @@ export default {
   name: "chooseTable",
   data() {
     return {
-      optration: "",
+      operation: "",
       tables: []
     };
   },
@@ -77,14 +77,14 @@ export default {
           }
         }
       }
-      if (this.optration === "funnel") {
+      if (this.operation === "funnel") {
         for (var table of tables_used) {
           conditions.push({
             id: table.id,
             exist: table.in
           });
         }
-      } else if (this.optration === "diff") {
+      } else if (this.operation === "diff") {
         for (var table of tables_used) {
           conditions.push(table.id);
         }
@@ -104,7 +104,7 @@ export default {
           }
         }
       }
-      if (this.optration === 'funnel'){
+      if (this.operation === 'funnel'){
         if(tables_used.length < 2){
           alert("请至少选择两个表格进行筛选");
           status = false;
@@ -117,7 +117,7 @@ export default {
             return status;
           }
         }
-      }else if (this.optration === 'diff'){
+      }else if (this.operation === 'diff'){
         if(tables_used.length != 2){
           alert("请选择两个表格进行对比");
           status = false;
