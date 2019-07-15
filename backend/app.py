@@ -1,7 +1,8 @@
 import copy
+from io import StringIO
 
 import pandas as pd
-from flask import Flask, request
+from flask import Flask, request, make_response
 from pandas.io.json import json
 
 from table import Table
@@ -24,10 +25,30 @@ def reset():
     return 'success'
 
 
+# @app.route('/export', methods=['POST'])
+@app.route('/export')
+def export():
+    # if request.method == 'POST':
+    if True:
+        # operation = request.form['operation']
+        operation = request.args['operation']
+        filename = 'output.csv'
+        result = None
+        if operation == 'funnel':
+            result = app.current_result['funnel']['result'][0]
+        elif operation == 'diff':
+            result = app.current_result['diff']['result'][0]
+        out = StringIO()
+        result.to_csv(out)
+        resp = make_response(out.getvalue())
+        resp.headers["Content-Disposition"] = "attachment; filename={}".format(filename)
+        resp.headers["Content-type"] = "text/csv"
+        return resp
+    return 'error'
+
+
 @app.route('/load_data', methods=['POST'])
 def load_data():
-    print(request.form)
-    print(request.args)
     if request.method == 'POST':
         path = request.form['path']
         table = Table(path)

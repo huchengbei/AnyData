@@ -50,6 +50,7 @@
     "axios": "^0.19.0",
     "electron-compile": "^6.4.4",
     "electron-devtools-installer": "^2.2.4",
+    "electron-download-manager": "^2.1.2",
     "electron-squirrel-startup": "^1.0.0",
     "element-ui": "2.10.1",
     "qs": "^6.7.0",

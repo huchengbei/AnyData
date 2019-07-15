@@ -60,3 +60,18 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+const { ipcMain } = require('electron')
+ipcMain.on('download', (event, arg) => {
+  const DownloadManager = require('electron-download-manager')
+  DownloadManager.download({
+    url: arg
+  }, function (error, info) {
+    if (error) {
+      console.log(error);
+      return;
+    }
+    console.log("DONE: " + info.url);
+  });
+});
+
+

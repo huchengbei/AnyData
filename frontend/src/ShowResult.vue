@@ -7,6 +7,7 @@
 <template>
   <div id="main">
     <div>
+      <el-button type="primary" @click="export_file()">导出</el-button>
 
   <el-table :data="tableData" v-loading="loading" border style="width: 100%">
     <el-table-column v-for="(item, index) in column_list" :key="index" :prop="item" :label="item"></el-table-column>
@@ -91,16 +92,20 @@ export default {
       }
     },
     nextPage(){
-      console.log("post start", this.post_data.start)
-      console.log("post num", this.post_data.num)
       var num = this.post_data.num;
       var start = this.post_data.start + num;
-      console.log("post start start", start)
       if(this.operation === 'funnel'){
         this.funnel(start, num);
       }else if(this.operation === 'diff'){
         this.diff(start, num);
       }
+    },
+    export_file(){
+      console.log('export file');
+      const { ipcRenderer } = require('electron');
+      console.log('export fiel ipc render');
+      ipcRenderer.send('download', 'http://127.0.0.1:5000/export?operation='+this.operation)
+      console.log('export end fiel ipc render');
     }
   },
   mounted: function(){
