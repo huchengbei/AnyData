@@ -156,7 +156,7 @@ export default {
             }]
         }).then(function(response) {
             if (response.data == "success"){
-              alert("设置成功:" + main_key);
+              // alert("设置成功:" + main_key);
               tableItem.main_key_setted = true;
             }
         }).catch(function(error){

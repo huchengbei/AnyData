@@ -104,7 +104,21 @@ export default {
       const { ipcRenderer } = require('electron');
       var url = 'http://127.0.0.1:5000/export?operation='+this.operation
       url = url + '&a=' + Math.round(Math.random()*1000) // 防止文件无更新
-      ipcRenderer.send('download', url)
+      ipcRenderer.on('download-reply', (event, message) => {
+        var data = JSON.parse(message);
+        if (data.state === 'success'){
+          alert(data.filename + '导出成功');
+        }else{
+          alert('导出失败');
+        }
+      });
+      // ipcRenderer.send('download', url)
+      var data = ipcRenderer.sendSync('download-sync', url)
+      if (data.state === 'success'){
+        alert(data.filename + '导出成功');
+      }else{
+        alert('导出失败');
+      }
     }
   },
   mounted: function(){

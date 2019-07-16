@@ -1,6 +1,8 @@
-import { app, BrowserWindow } from 'electron';
-import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
-import { enableLiveReload } from 'electron-compile';
+import {app, BrowserWindow} from 'electron';
+
+const {ipcMain} = require('electron')
+import installExtension, {VUEJS_DEVTOOLS} from 'electron-devtools-installer';
+import {enableLiveReload} from 'electron-compile';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -11,29 +13,29 @@ const isDevMode = process.execPath.match(/[\\/]electron/);
 if (isDevMode) enableLiveReload();
 
 const createWindow = async () => {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-  });
+    // Create the browser window.
+    mainWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+    });
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
-  // mainWindow.setMenu(null);
+    // and load the index.html of the app.
+    mainWindow.loadURL(`file://${__dirname}/index.html`);
+    // mainWindow.setMenu(null);
 
-  // Open the DevTools.
-  if (isDevMode) {
-    await installExtension(VUEJS_DEVTOOLS);
-    mainWindow.webContents.openDevTools();
-  }
+    // Open the DevTools.
+    if (isDevMode) {
+        await installExtension(VUEJS_DEVTOOLS);
+        mainWindow.webContents.openDevTools();
+    }
 
-  // Emitted when the window is closed.
-  mainWindow.on('closed', () => {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null;
-  });
+    // Emitted when the window is closed.
+    mainWindow.on('closed', () => {
+        // Dereference the window object, usually you would store windows
+        // in an array if your app supports multi windows, this is the time
+        // when you should delete the corresponding element.
+        mainWindow = null;
+    });
 };
 
 // This method will be called when Electron has finished
@@ -43,35 +45,89 @@ app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+    // On OS X it is common for applications and their menu bar
+    // to stay active until the user quits explicitly with Cmd + Q
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
 });
 
 app.on('activate', () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow();
-  }
+    // On OS X it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (mainWindow === null) {
+        createWindow();
+    }
 });
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
-const { ipcMain } = require('electron')
-ipcMain.on('download', (event, arg) => {
-  const DownloadManager = require('electron-download-manager')
-  DownloadManager.download({
-    url: arg
-  }, function (error, info) {
-    if (error) {
-      console.log(error);
-      return;
-    }
-    console.log("DONE: " + info.url);
-  });
+ipcMain.on('download-sync', (event, arg) => {
+    let win = new BrowserWindow({
+        show: false
+    });
+    let ipc_event = event;
+    const path = require('path')
+    win.webContents.session.on('will-download', (event, item, webContents) => {
+        item.on('updated', (event, state) => {
+            if (state === 'interrupted') {
+                console.log('Download is interrupted but can be resumed')
+            } else if (state === 'progressing') {
+                if (item.isPaused()) {
+                    console.log('Download is paused')
+                } else {
+                    console.log(`Received bytes: ${item.getReceivedBytes()}`)
+                }
+            }
+        })
+        item.once('done', (event, state) => {
+            if (state === 'completed') {
+                console.log('Download successfully')
+                var message = JSON.stringify({
+                    state: 'success',
+                    filename: path.basename(item.getSavePath())
+                });
+                ipc_event.returnValue = message;
+                win.close();
+            } else {
+                console.log(`Download failed: ${state}`)
+            }
+        })
+    });
+    win.webContents.downloadURL(arg);
 });
-
+ipcMain.on('download', (event, arg) => {
+    let win = new BrowserWindow({
+        show: false
+    });
+    let ipc_event = event;
+    const path = require('path')
+    win.webContents.session.on('will-download', (event, item, webContents) => {
+        item.on('updated', (event, state) => {
+            if (state === 'interrupted') {
+                console.log('Download is interrupted but can be resumed')
+            } else if (state === 'progressing') {
+                if (item.isPaused()) {
+                    console.log('Download is paused')
+                } else {
+                    console.log(`Received bytes: ${item.getReceivedBytes()}`)
+                }
+            }
+        })
+        item.once('done', (event, state) => {
+            if (state === 'completed') {
+                console.log('Download successfully')
+                var message = JSON.stringify({
+                    state: 'success',
+                    filename: path.basename(item.getSavePath())
+                })
+                ipc_event.sender.send('download-reply', message)
+                win.close()
+            } else {
+                console.log(`Download failed: ${state}`)
+            }
+        })
+    });
+    win.webContents.downloadURL(arg);
+});
 

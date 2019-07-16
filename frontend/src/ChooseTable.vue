@@ -91,7 +91,6 @@ export default {
       } else {
         return false;
       }
-      console.log(conditions);
       return conditions;
     },
     check_condition() {
