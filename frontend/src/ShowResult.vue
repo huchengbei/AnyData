@@ -9,7 +9,7 @@
     <div>
       <el-button type="primary" @click="export_file()">导出</el-button>
 
-  <el-table :data="tableData" v-loading="loading" border style="width: 100%">
+  <el-table :data="tableData" v-loading="loading" :element-loading-text="loading_text" border style="width: 100%">
     <el-table-column v-for="(item, index) in column_list" :key="index" :prop="item" :label="item"></el-table-column>
   </el-table>
     </div>
@@ -22,11 +22,13 @@
 
 <script>
 import axios from "axios";
+import qs from 'qs'
 export default {
   data() {
     return {
       operation: '',
       loading: true,
+      loading_text: '',
       column_list: [],
       tableData: [
       ],
@@ -100,25 +102,41 @@ export default {
         this.diff(start, num);
       }
     },
-    export_file(){
-      const { ipcRenderer } = require('electron');
-      var url = 'http://127.0.0.1:5000/export?operation='+this.operation
-      url = url + '&a=' + Math.round(Math.random()*1000) // 防止文件无更新
-      ipcRenderer.on('download-reply', (event, message) => {
-        var data = JSON.parse(message);
-        if (data.state === 'success'){
-          alert(data.filename + '导出成功');
-        }else{
-          alert('导出失败');
+    export_file: function () {
+      var that = this;
+      const dialog = require('electron').remote.dialog
+      dialog.showSaveDialog({
+        title: '导出到',
+        defaultPath: this.operation + '.xlsx',
+      }, (filename => {
+        if (filename === undefined) {
+          return;
         }
-      });
-      // ipcRenderer.send('download', url)
-      var data = ipcRenderer.sendSync('download-sync', url)
-      if (data.state === 'success'){
-        alert(data.filename + '导出成功');
-      }else{
-        alert('导出失败');
-      }
+        that.loading = true;
+        that.loading_text = '正在导出';
+        axios.post('http://127.0.0.1:5000/export', {
+          path: filename,
+          operation: this.operation,
+
+          a: Math.round(Math.random() * 1000) // 防止文件无更新
+        }, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
+          },
+          transformRequest: [function (data) {
+            return qs.stringify(data)
+          }]
+        }).then(function (response) {
+          var data = response.data
+          if (data === 'success') {
+            that.loading = false;
+            alert('success')
+          } else {
+            that.loading = false;
+            alert('error')
+          }
+        })
+      }));
     }
   },
   mounted: function(){

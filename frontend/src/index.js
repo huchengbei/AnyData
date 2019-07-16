@@ -1,6 +1,5 @@
 import {app, BrowserWindow} from 'electron';
 
-const {ipcMain} = require('electron')
 import installExtension, {VUEJS_DEVTOOLS} from 'electron-devtools-installer';
 import {enableLiveReload} from 'electron-compile';
 
@@ -62,72 +61,4 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
-ipcMain.on('download-sync', (event, arg) => {
-    let win = new BrowserWindow({
-        show: false
-    });
-    let ipc_event = event;
-    const path = require('path')
-    win.webContents.session.on('will-download', (event, item, webContents) => {
-        item.on('updated', (event, state) => {
-            if (state === 'interrupted') {
-                console.log('Download is interrupted but can be resumed')
-            } else if (state === 'progressing') {
-                if (item.isPaused()) {
-                    console.log('Download is paused')
-                } else {
-                    console.log(`Received bytes: ${item.getReceivedBytes()}`)
-                }
-            }
-        })
-        item.once('done', (event, state) => {
-            if (state === 'completed') {
-                console.log('Download successfully')
-                var message = JSON.stringify({
-                    state: 'success',
-                    filename: path.basename(item.getSavePath())
-                });
-                ipc_event.returnValue = message;
-                win.close();
-            } else {
-                console.log(`Download failed: ${state}`)
-            }
-        })
-    });
-    win.webContents.downloadURL(arg);
-});
-ipcMain.on('download', (event, arg) => {
-    let win = new BrowserWindow({
-        show: false
-    });
-    let ipc_event = event;
-    const path = require('path')
-    win.webContents.session.on('will-download', (event, item, webContents) => {
-        item.on('updated', (event, state) => {
-            if (state === 'interrupted') {
-                console.log('Download is interrupted but can be resumed')
-            } else if (state === 'progressing') {
-                if (item.isPaused()) {
-                    console.log('Download is paused')
-                } else {
-                    console.log(`Received bytes: ${item.getReceivedBytes()}`)
-                }
-            }
-        })
-        item.once('done', (event, state) => {
-            if (state === 'completed') {
-                console.log('Download successfully')
-                var message = JSON.stringify({
-                    state: 'success',
-                    filename: path.basename(item.getSavePath())
-                })
-                ipc_event.sender.send('download-reply', message)
-                win.close()
-            } else {
-                console.log(`Download failed: ${state}`)
-            }
-        })
-    });
-    win.webContents.downloadURL(arg);
-});
 

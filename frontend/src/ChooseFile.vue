@@ -78,7 +78,6 @@
 <script>
 import axios from 'axios'
 import qs from 'qs'
-import { resolve } from 'path';
 export default {
     name: 'chooseFile',
     data() {
