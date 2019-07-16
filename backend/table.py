@@ -16,6 +16,8 @@ class Table:
             self.data = pd.read_csv(path, dtype='str')
         elif suffix == '.xlsx':
             self.data = pd.read_excel(path, dtype='str')
+        elif suffix == '.xls':
+            self.data = pd.read_excel(path, dtype='str')
         else:
             pass
 
