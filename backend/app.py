@@ -1,8 +1,9 @@
 import copy
-from io import StringIO
+from io import BytesIO
 
 import pandas as pd
-from flask import Flask, request, make_response
+from flask import Flask, request, send_file
+from pandas import ExcelWriter
 from pandas.io.json import json
 
 from table import Table
@@ -25,25 +26,23 @@ def reset():
     return 'success'
 
 
-# @app.route('/export', methods=['POST'])
-@app.route('/export')
+@app.route('/export', methods=['GET'])
 def export():
-    # if request.method == 'POST':
-    if True:
-        # operation = request.form['operation']
+    if request.method == 'GET':
         operation = request.args['operation']
-        filename = 'output.csv'
+        filename = operation + '.xlsx'
         result = None
         if operation == 'funnel':
             result = app.current_result['funnel']['result'][0]
         elif operation == 'diff':
             result = app.current_result['diff']['result'][0]
-        out = StringIO()
-        result.to_csv(out)
-        resp = make_response(out.getvalue())
-        resp.headers["Content-Disposition"] = "attachment; filename={}".format(filename)
-        resp.headers["Content-type"] = "text/csv"
-        return resp
+        excel = BytesIO()
+        write = ExcelWriter(excel)
+        result.to_excel(write, 'sheet1')
+        write.close()
+        excel.seek(0)
+
+        return send_file(excel, attachment_filename=filename, as_attachment=True, mimetype='text/xlsx')
     return 'error'
 
 
