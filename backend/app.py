@@ -151,6 +151,9 @@ def get_funnel_data(condition):
     if fixed_table.main_key not in common_column:
         common_column = [fixed_table.main_key] + common_column
     result_all = fixed_table.get_list_by_list_columns(be_in, common_column)
+    index = pd.Series(range(1, len(result_all)+1))
+    index.rename('序号', inplace=True)
+    result_all.index = index
     return result_all, common_column
 
 
@@ -209,7 +212,6 @@ def get_diff_data(ids):
 
     if '序号' in common_column:
         common_column.remove('序号')
-    common_column.remove('与户主关系')
     pre_diff_tables = list()
     for table_id in ids:
         table = app.tables[table_id]
@@ -240,6 +242,9 @@ def get_diff_data(ids):
                 be_error.append(index)
                 break
     result_all = result_all[result_all.index.isin(be_error)]
+    index = pd.Series(range(1, len(result_all)+1))
+    index.rename('序号', inplace=True)
+    result_all.index = index
     return result_all, new_columns
 
 
