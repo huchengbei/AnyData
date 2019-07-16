@@ -5,11 +5,10 @@
 }
 </style>
 <template>
-  <div id="main">
+  <div id="main" v-loading="loading">
     <div>
-      <el-button type="primary" @click="export_file()">导出</el-button>
-
-  <el-table :data="tableData" v-loading="loading" :element-loading-text="loading_text" border style="width: 100%">
+      <div><span>共找到{{total}}条数据</span><el-button type="primary" @click="export_file()">导出</el-button></div>
+  <el-table :data="tableData" :element-loading-text="loading_text" border style="width: 100%">
     <el-table-column v-for="(item, index) in column_list" :key="index" :prop="item" :label="item"></el-table-column>
   </el-table>
     </div>
@@ -27,6 +26,7 @@ export default {
   data() {
     return {
       operation: '',
+      total: '',
       loading: true,
       loading_text: '',
       column_list: [],
@@ -80,6 +80,7 @@ export default {
       this.column_list = column_list;
       this.tableData = data['data'];
       this.loading = false;
+      this.total = data.total;
     },
     prePage(){
       var num = this.post_data.num;
@@ -105,6 +106,8 @@ export default {
     export_file: function () {
       var that = this;
       const dialog = require('electron').remote.dialog
+      const { shell } = require('electron')
+      const path = require('path')
       dialog.showSaveDialog({
         title: '导出到',
         defaultPath: this.operation + '.xlsx',
@@ -117,7 +120,6 @@ export default {
         axios.post('http://127.0.0.1:5000/export', {
           path: filename,
           operation: this.operation,
-
           a: Math.round(Math.random() * 1000) // 防止文件无更新
         }, {
           headers: {
@@ -130,10 +132,21 @@ export default {
           var data = response.data
           if (data === 'success') {
             that.loading = false;
-            alert('success')
+            dialog.showMessageBox({
+              buttons: ['打开文件所在文件夹', '知道了'],
+              defaultId: 0,
+              title: path.basename(filename) + '导出成功'
+            }, function (response) {
+              if (response == 0){
+                shell.showItemInFolder(filename);
+              }
+            })
           } else {
             that.loading = false;
-            alert('error')
+            dialog.showMessageBox({
+             buttons: [ '知道了'],
+              title: path.basename(filename) + '导出失败'
+            })
           }
         })
       }));
