@@ -101,11 +101,10 @@ export default {
       }
     },
     export_file(){
-      console.log('export file');
       const { ipcRenderer } = require('electron');
-      console.log('export fiel ipc render');
-      ipcRenderer.send('download', 'http://127.0.0.1:5000/export?operation='+this.operation)
-      console.log('export end fiel ipc render');
+      var url = 'http://127.0.0.1:5000/export?operation='+this.operation
+      url = url + '&a=' + Math.round(Math.random()*1000) // 防止文件无更新
+      ipcRenderer.send('download', url)
     }
   },
   mounted: function(){
