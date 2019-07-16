@@ -53,7 +53,11 @@
         <el-table-column prop="filePath" label="文件路径"> </el-table-column>
         <el-table-column prop="main_key" label="主Key">
           <template slot-scope="scope">
-          <el-select v-model="scope.row.main_key" placeholder="请选择" @change="select_on_change($event, scope.row)">
+              <div v-if="scope.row.loading" align="center" style="font-size: 20px" >
+                <i class="el-icon-loading is-big"></i>
+              </div>
+          <el-select v-else v-model="scope.row.main_key"placeholder="请选择" :loading="scope.row.loading"
+                     loading-text="正在加载中" @change="select_on_change($event, scope.row)">
             <el-option
               v-for="item in scope.row.options"
               :key="item.value"
@@ -89,8 +93,8 @@ export default {
       showOpenDialog() {
         const dialog = require('electron').remote.dialog
         dialog.showOpenDialog({
-          title: '选择要上传的文件（支持多选）',
-          properties: ['openFile', 'multiSelections', 'showHiddenFiles']
+          title: '选择要分析的文件',
+          properties: ['openFile']
         }, (filePaths) => {
           const fs = require('fs')
           const path = require('path')
@@ -101,6 +105,7 @@ export default {
               fileName: path.basename(filePath),
               fileSize: stat.size,
               options: [],
+              loading: true,
               main_key: '',
               id: 0,
               main_key_setted: false
@@ -124,8 +129,9 @@ export default {
                   label: item
                 })
               }
-              that.tableData[that.tableData.length - 1].options = options
-              that.tableData[that.tableData.length - 1].id = data['id']
+              that.tableData[that.tableData.length - 1].options = options;
+              that.tableData[that.tableData.length - 1].id = data['id'];
+              that.tableData[that.tableData.length - 1].loading = false;
             }).catch(function(error){
               console.log(error)
             })
