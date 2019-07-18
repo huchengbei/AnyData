@@ -1,13 +1,11 @@
 import copy
-from io import BytesIO
 
 import pandas as pd
-from flask import Flask, request, send_file
-from pandas import ExcelWriter
+from flask import Flask, request
 from pandas.io.json import json
 
 from table import Table
-from util.functions import intersection_safe, union, difference_safe, slice_df
+from util.functions import intersection_safe, union, difference_safe, slice_df, intersection
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '123456'
@@ -18,6 +16,41 @@ app.current_result = {}
 @app.route('/')
 def hello_world():
     return 'Hello World!'
+
+
+@app.route('/analyze_table', methods=['POST'])
+def analyze_table():
+    if request.method == 'POST':
+        table_id = int(request.form['id'])
+        col_name = request.form['col_name']
+        result = get_col_analysis(table_id, col_name)
+        return result
+    return 'error'
+
+
+@app.route('/get_table_rates', methods=['POST'])
+def get_table_rates():
+    if request.method == 'POST':
+        table_id = int(request.form['id'])
+        result = get_all_rate(table_id)
+        return result
+    return 'error'
+
+
+def get_col_analysis(table_id, col_name):
+    table = app.tables[table_id]
+    return table.analyze_col(col_name).to_dict()
+
+
+def get_all_rate(table_id):
+    result = {}
+    fix_table = app.tables[table_id]
+    fix_ids = fix_table[fix_table.main_key]
+    for table in app.tables:
+        ids = table[table.main_key]
+        be_in = intersection(ids, fix_ids)
+        result[table.table_name] = round(len(be_in) / len(ids), 2)
+    return result
 
 
 @app.route('/reset', methods=['POST'])

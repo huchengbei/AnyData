@@ -21,6 +21,11 @@ class Table:
         else:
             pass
 
+    def analyze_col(self, col_name):
+        if col_name not in self.get_column_list():
+            return False;
+        return self.data.groupby(col_name).size()
+
     def set_main_key(self, main_key):
         if main_key not in self.get_column_list():
             return False
