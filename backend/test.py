@@ -91,5 +91,14 @@ def test8():
     print(df.loc['cobra'])
     print(['']*3)
 
+def test9():
+    the_poor = Table('resources/the_poors.csv')
+    ana = the_poor.analyze_col('民族')
+    temp_list = list(sorted(ana.items(), key=lambda x: x[1]))
+    print(temp_list)
+    print(ana)
 
-test7()
+
+
+
+test9()

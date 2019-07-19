@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import copy
+from functools import reduce
 
 import pandas as pd
 from flask import Flask, request
@@ -175,7 +176,17 @@ def get_pie_chart_options(source_data,table_name, chart_name):
 
 def get_col_analysis(table_id, col_name):
     table = app.tables[table_id]
-    return table.analyze_col(col_name).to_dict()
+    data = table.analyze_col(col_name)
+    s = int(data.sum())
+    temp_list = list(sorted(data.items(), key=lambda x: -x[1]))[0:6]
+    temp_sum = 0
+    for item in temp_list:
+        temp_sum += item[1]
+    temp_list.append(('其他', s - temp_sum))
+    result = {}
+    for item in temp_list:
+        result[item[0]] = item[1]
+    return result
 
 
 def get_all_rate(table_id):
