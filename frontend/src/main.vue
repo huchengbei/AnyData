@@ -8,7 +8,7 @@
     height: 100%;
   }
 
-  .homeBox > section{
+  section{
       height: 100%;
   }
 
@@ -18,7 +18,7 @@
     text-align: center;
     line-height: 60px;
   }
-  
+
   .el-aside {
     background-color: #D3DCE6;
     color: #333;
@@ -27,25 +27,25 @@
     padding-bottom: 5%;
     /* line-height: 200px; */
   }
-  
+
   .el-main {
     /* background-color: #E9EEF3; */
     color: #333;
     /* text-align: center; */
     /* line-height: 160px; */
   }
-  
+
   body > .el-container {
     margin-top: 0%;
     height: 100%;
     /* margin-bottom: 40px; */
   }
-  
+
   .el-container:nth-child(5) .el-aside,
   .el-container:nth-child(6) .el-aside {
     line-height: 260px;
   }
-  
+
   .el-container:nth-child(7) .el-aside {
     line-height: 320px;
   }
@@ -86,6 +86,7 @@ import ChooseFile from './ChooseFile';
 import ChooseOperation from './ChooseOperation';
 import ChooseTable from './ChooseTable';
 import ShowResult from './ShowResult.vue';
+import Charts from './Charts.vue';
 export default {
     name: 'main',
     data() {
@@ -98,6 +99,7 @@ export default {
         chooseOperation: '',
         chooseTable: '',
         showResult: '',
+        charts: '',
       }
     },
     methods: {
@@ -108,13 +110,18 @@ export default {
                 }else{
                   this.files = this.chooseFile.tableData;
                   this.mountChooseOperation();
+                  // this.mountCharts();
                 }
             }else if(this.step === 2) {
               this.operation = this.chooseOperation.operation;
               this.mountChooseTable();
             }else if(this.step === 3) {
               if(this.chooseTable.check_condition()){
-                this.mountShowResult();
+                  if(this.operation == 'analyze'){
+                      this.mountCharts();
+                  }else{
+                      this.mountShowResult();
+                  }
               }
             }
         },
@@ -171,22 +178,31 @@ export default {
           this.step = 3;
         },
         mountShowResult(){
-          this.showResult = new Vue(ShowResult);
-          var post_data = {}
-          post_data.start = 0;
-          post_data.num = 10;
-          if (this.operation == 'funnel'){
-            post_data.condition = this.chooseTable.get_condition();
-          }else if (this.operation == 'diff'){
-            post_data.ids = this.chooseTable.get_condition();
-          }
-          this.showResult.post_data = post_data;
-          this.showResult.operation = this.chooseOperation.operation;
-          this.showResult.$mount('#main')
-          this.step = 4;
+            this.showResult = new Vue(ShowResult);
+            var post_data = {}
+            post_data.start = 0;
+            post_data.num = 10;
+            if (this.operation == 'funnel'){
+                post_data.condition = this.chooseTable.get_condition();
+            }else if (this.operation == 'diff'){
+                post_data.ids = this.chooseTable.get_condition();
+            }
+            this.showResult.post_data = post_data;
+            this.showResult.operation = this.chooseOperation.operation;
+            this.showResult.$mount('#main')
+            this.step = 4;
+        },
+        mountCharts(){
+          this.charts = new Vue(Charts);
+          var obj = this.chooseTable.get_condition();
+          this.charts.tables = this.files;
+          this.charts.default_id_col['id'] = obj['id'];
+          this.charts.default_id_col['col_name'] = obj['col_name'];
+          this.charts.$mount('#main')
         },
     },
     mounted() {
+      // this.mountCharts();
       this.mountChooseFile();
       // this.mountChooseOperation();
       // this.mountChooseTable();

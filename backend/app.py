@@ -49,7 +49,7 @@ def format_dict_to_list(source_data):
         result.append({
             'col_name': key,
             'total': value,
-            'pre': str(round(int(value) / total, 4) * 100) + '%'
+            'pre': str(round(int(value) * 100 / total, 2)) + '%'
         })
     return result
 
@@ -72,6 +72,13 @@ def get_bar_chart_options(source_data,table_name, chart_name):
         'trigger': 'axis',
         'axisPointer': {
             'type': 'shadow'
+        }
+    }
+    toolbox = {
+        'show': True,
+        'feature': {
+            'restore': {'show': True},
+            'saveAsImage': {'show': True}
         }
     }
     title = {
@@ -106,6 +113,7 @@ def get_bar_chart_options(source_data,table_name, chart_name):
                 'type': 'value'
             }
         ],
+        'toolbox': toolbox,
         'legend': legend,
         'series': [chart]
     }
@@ -183,7 +191,7 @@ def get_all_rate(table_id):
             'table_name': table.table_name,
             'total': len_ids,
             'in': len_be_in,
-            'pre': str(round(len_be_in / len_ids, 4) * 100) + '%',
+            'pre': str(round(len_be_in * 100 / len_ids, 2)) + '%',
         })
     return result
 

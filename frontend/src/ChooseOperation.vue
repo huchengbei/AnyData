@@ -41,6 +41,11 @@
     <el-badge value="√" class="item" type="primary" :hidden="diff_hidden">
       <el-button size="big" type="info" plain @click="choose_diff">对比</el-button>
     </el-badge>
+  </div></el-col>
+  <el-col :span="8"><div class="grid-content bg-purple">
+    <el-badge value="√" class="item" type="primary" :hidden="analyze_hidden">
+      <el-button size="big" type="info" plain @click="choose_analyze">分析</el-button>
+    </el-badge>
     </div></el-col>
 </el-row>
 </div>
@@ -53,6 +58,7 @@ export default {
       return {
         funnel_hidden: true,
         diff_hidden: true,
+        analyze_hidden: true,
         operation: '',
      }
     },
@@ -60,15 +66,23 @@ export default {
       choose_funnel() {
         this.funnel_hidden=false;
         this.diff_hidden=true;
+        this.analyze_hidden=true;
         this.operation="funnel";
       },
       choose_diff() {
         this.funnel_hidden=true;
         this.diff_hidden=false;
+        this.analyze_hidden=true;
         this.operation="diff";
       },
+      choose_analyze() {
+        this.funnel_hidden=true;
+        this.diff_hidden=true;
+        this.analyze_hidden=false;
+        this.operation="analyze";
+      },
       check_operation(){
-        return this.funnel_hidden || this.diff_hidden;
+        return this.funnel_hidden || this.diff_hidden || this.analyze_hidden;
       }
     }
   }

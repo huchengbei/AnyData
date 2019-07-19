@@ -46,6 +46,20 @@
                 :label="item.exist"
               >{{item.label}}</el-radio>
             </el-radio-group>
+            <el-select
+                    v-else-if="operation === 'analyze'"
+                    :disabled="col.hidden"
+                    v-model="col.col_name"
+                    style="margin-left: 20px;"
+                    placeholder="请选择列"
+                    @change="col_change()">
+              <el-option
+                      v-for="(item,index) in col.options"
+                      :key="index"
+                      :label="item.label"
+                      :value="item.value">
+              </el-option>
+            </el-select>
           </el-card>
         </el-badge>
       </el-col>
@@ -65,6 +79,9 @@ export default {
   methods: {
     use_table(item) {
       item.hidden = !item.hidden;
+      this.$forceUpdate();
+    },
+    col_change() {
       this.$forceUpdate();
     },
     get_condition() {
@@ -88,7 +105,14 @@ export default {
         for (var table of tables_used) {
           conditions.push(table.id);
         }
-      } else {
+      } else if (this.operation === 'analyze') {
+        var id = tables_used[0].id;
+        var col_name = tables_used[0].col_name;
+        return {
+          id: id,
+          col_name: col_name
+        }
+      }else {
         return false;
       }
       return conditions;
@@ -122,6 +146,17 @@ export default {
           status = false;
           return status;
         }
+      }else if (this.operation === 'analyze'){
+        if (tables_used.length != 1){
+          alert("请仅选择一个表格进行分析");
+          status = false;
+          return status;
+        }
+        if (tables_used[0].col_nam == ''){
+          alert("请选择分析列");
+          status = false;
+          return status;
+        }
       }
       return true;
     },
@@ -130,6 +165,7 @@ export default {
     for (var i in this.tables) {
       for (var j in this.tables[i]) {
         this.tables[i][j].hidden = true;
+        this.tables[i][j].col_name = '';
         this.tables[i][j].radio_options = [
           {
             exist: 1,
