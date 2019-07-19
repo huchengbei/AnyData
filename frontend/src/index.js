@@ -14,8 +14,8 @@ if (isDevMode) enableLiveReload();
 const createWindow = async () => {
     // Create the browser window.
     mainWindow = new BrowserWindow({
-        width: 1200,
-        height: 650,
+        width: 1300,
+        height: 700,
     });
 
     // and load the index.html of the app.
