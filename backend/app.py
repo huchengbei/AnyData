@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import copy
 
 import pandas as pd
@@ -23,7 +24,11 @@ def analyze_table():
     if request.method == 'POST':
         table_id = int(request.form['id'])
         col_name = request.form['col_name']
-        result = get_col_analysis(table_id, col_name)
+        data = get_col_analysis(table_id, col_name)
+        result = {'pie': get_pie_chart_options(data, app.tables[table_id].table_name, col_name + '-信息统计'),
+                  'bar': get_bar_chart_options(data, app.tables[table_id].table_name, col_name + '-分布'),
+                  'rates': get_all_rate(table_id),
+                  'data_list': format_dict_to_list(data)}
         return result
     return 'error'
 
@@ -33,8 +38,131 @@ def get_table_rates():
     if request.method == 'POST':
         table_id = int(request.form['id'])
         result = get_all_rate(table_id)
-        return result
+        return json.dumps(result)
     return 'error'
+
+
+def format_dict_to_list(source_data):
+    total = sum(set(source_data.values()))
+    result = []
+    for key, value in source_data.items():
+        result.append({
+            'col_name': key,
+            'total': value,
+            'pre': str(round(int(value) / total, 4) * 100) + '%'
+        })
+    return result
+
+
+def get_bar_chart_options(source_data,table_name, chart_name):
+    data = list(source_data.values())
+    keys = list(source_data.keys())
+    chart = {
+        'name': chart_name,
+        'type': 'bar',
+        'barWidth': '60%',
+        'data': data,
+    }
+    legend = {
+        'bottom': 10,
+        'left': 'center',
+        'data': keys
+    }
+    tooltip = {
+        'trigger': 'axis',
+        'axisPointer': {
+            'type': 'shadow'
+        }
+    }
+    title = {
+        'text': chart_name,
+        'subtext': table_name,
+        'left': 'center'
+    }
+    result = {
+        'title': title,
+        'color': ['#3398DB'],
+        'tooltip': tooltip,
+        'grid': {
+            'left': '1%',
+            'right': '2%',
+            'bottom': '1%',
+            'containLabel': True,
+        },
+        'xAxis': [
+            {
+                'type': 'category',
+                'data': keys,
+                'axisTick': {
+                    'alignWithLabel': True
+                },
+                'axisLabel': {
+                    'showMaxLabel': True
+                }
+            }
+        ],
+        'yAxis': [
+            {
+                'type': 'value'
+            }
+        ],
+        'legend': legend,
+        'series': [chart]
+    }
+    return result
+
+
+def get_pie_chart_options(source_data,table_name, chart_name):
+    data = []
+    for key, value in source_data.items():
+        data.append({
+            'value': value,
+            'name': key,
+        })
+    chart = {
+        'name': chart_name,
+        'type': 'pie',
+        'radius': '65%',
+        'data': data,
+        'itemStyle': {
+            'emphasis': {
+                'shadowBlur': 10,
+                'shadowOffsetX': 0,
+                'shadowColor': 'rgba(0, 0, 0, 0.5)'
+            }
+        }
+    }
+    legend = {
+        'orient': '',
+        'x': 'left',
+        'y': 'bottom',
+        'data': list(source_data.keys())
+    }
+    tooltip = {
+        'trigger': 'item',
+        'formatter': "{a} <br/>{b} : {c} ({d}%)"
+    },
+    toolbox = {
+        'show': True,
+        'feature': {
+            'restore': {'show': True},
+            'saveAsImage': {'show': True}
+        }
+    }
+    title = {
+        'text': chart_name,
+        'subtext': table_name,
+        'x': 'left',
+        'y': 'top'
+    }
+    result = {
+        'title': title,
+        'tooltip': tooltip,
+        'toolbox': toolbox,
+        'legend': legend,
+        'series': [chart]
+    }
+    return result
 
 
 def get_col_analysis(table_id, col_name):
@@ -43,13 +171,20 @@ def get_col_analysis(table_id, col_name):
 
 
 def get_all_rate(table_id):
-    result = {}
+    result = []
     fix_table = app.tables[table_id]
     fix_ids = fix_table[fix_table.main_key]
     for table in app.tables:
         ids = table[table.main_key]
         be_in = intersection(ids, fix_ids)
-        result[table.table_name] = round(len(be_in) / len(ids), 2)
+        len_ids = len(ids)
+        len_be_in = len(be_in)
+        result.append({
+            'table_name': table.table_name,
+            'total': len_ids,
+            'in': len_be_in,
+            'pre': str(round(len_be_in / len_ids, 4) * 100) + '%',
+        })
     return result
 
 
@@ -183,7 +318,7 @@ def get_funnel_data(condition):
     if fixed_table.main_key not in common_column:
         common_column = [fixed_table.main_key] + common_column
     result_all = fixed_table.get_list_by_list_columns(be_in, common_column)
-    index = pd.Series(range(1, len(result_all)+1))
+    index = pd.Series(range(1, len(result_all) + 1))
     index.rename('序号', inplace=True)
     result_all.index = index
     return result_all, common_column
@@ -274,7 +409,7 @@ def get_diff_data(ids):
                 be_error.append(index)
                 break
     result_all = result_all[result_all.index.isin(be_error)]
-    index = pd.Series(range(1, len(result_all)+1))
+    index = pd.Series(range(1, len(result_all) + 1))
     index.rename('序号', inplace=True)
     result_all.index = index
     return result_all, new_columns
