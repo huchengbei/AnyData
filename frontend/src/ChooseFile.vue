@@ -29,34 +29,48 @@
     width: 100%;
   }
 </style>
+
 <template>
 <div id="main">
   <el-card class="box-card">
     <div class="clearfix">
-    <span>请选择需要分析的文件</span>
-    <el-button style="float: right; padding: 3px 0" type="text" @click="reset">
-      清除所有
-    </el-button>
     </div>
   <div class="file-container">
     <div class="file-selecter">
       <!-- el-input -->
-      <el-input placeholder="请选择文件,支持多选" v-model="fileSelected" :disabled="true">
+      <el-input placeholder="点击左侧图标选择文件,仅支持.xls或.xlsx文件" v-model="fileSelected" :disabled="true">
         <template slot="prepend">
-          <el-button type="primary" @click="showOpenDialog()">选择文件</el-button>
+          <el-button type="primary" @click="showOpenDialog()"><i class="el-icon-upload"></i></el-button>
         </template>
       </el-input>
     </div>
     <div class="file-datatable">
-      <div>共对 {{tableData.length}} 个表格进行操作</div>
-      <el-table v-loading="isLoading" element-loading-text="拼命加载中" :data="tableData" style="width: 100%">
-        <el-table-column prop="filePath" label="文件路径"> </el-table-column>
-        <el-table-column prop="main_key" label="主Key">
+      <div>
+        <el-tag>共对 {{tableData.length}} 个表格进行操作</el-tag>
+        <el-button type="danger" style="float: right; padding: 7px 2px" @click="reset">
+          清除所有<i class="el-icon-delete-solid"></i>
+        </el-button>
+      </div>
+      <el-table v-loading="isLoading"
+                element-loading-text="拼命加载中"
+                :data="tableData"
+                :default-sort = "{prop: 'filePath', order: 'descending'}"
+                stripe
+                style="width: 100%">
+        <el-table-column prop="filePath"
+                         label="文件路径"
+                         align="center"
+                         fixed >
+        </el-table-column>
+        <el-table-column prop="main_key"
+                         label="主Key"
+                         align="center"
+                         width="200">
           <template slot-scope="scope">
               <div v-if="scope.row.loading" align="center" style="font-size: 20px" >
                 <i class="el-icon-loading is-big"></i>
               </div>
-          <el-select v-else v-model="scope.row.main_key"placeholder="请选择" :loading="scope.row.loading"
+          <el-select v-else v-model="scope.row.main_key"placeholder="点击选择主键" :loading="scope.row.loading"
                      loading-text="正在加载中" @change="select_on_change($event, scope.row)">
             <el-option
               v-for="item in scope.row.options"
@@ -67,7 +81,19 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column prop="fileSize" label="文件大小" fixed="right" width="100"> </el-table-column>
+        <el-table-column prop="fileSize"
+                         label="文件大小"
+                         align="center"
+                         width="100">
+        </el-table-column>
+        <el-table-column label="操作"
+                         fixed="right"
+                         align="center"
+                         width="100">
+          <template slot-scope="scope">
+            <el-button type="danger" @click="removeRow(scope.row)" icon="el-icon-delete" circle></el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
   </div>
@@ -165,14 +191,15 @@ export default {
       },
       reset(){
         var that = this;
-        axios.post('http://127.0.0.1:5000/reset' ).then(function(response) {
+        if(confirm('是否确定全部清除？')) {
+          axios.post('http://127.0.0.1:5000/reset' ).then(function(response) {
             if (response.data == "success"){
-              alert("清除成功");
               that.tableData = []
             }
-        }).catch(function(error){
+          }).catch(function(error){
             console.log(error)
-        })
+          })
+        }
       },
       check_main_key() {
         var status = true;
@@ -180,6 +207,11 @@ export default {
           status &= item.main_key_setted;
         }
         return status;
+      },
+      removeRow(data) {
+        if(confirm('是否确定删除此项？')) {
+          this.tableData.splice(this.tableData.indexOf(data), 1);
+        }
       },
     }
   }
