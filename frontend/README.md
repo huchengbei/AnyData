@@ -9,6 +9,7 @@ electron+vue+element-ui
 ELECTRON_MIRROR=https://npm.taobao.org/mirrors/electron/
 registry=https://registry.npm.taobao.org
 ```
+在命令行中
 ```
 git clone https://github.com/huchengbei/AnyData.git
 cd AnyData/frontend
