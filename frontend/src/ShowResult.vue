@@ -7,14 +7,14 @@
 <template>
   <div id="main" v-loading="loading">
     <div>
-      <div><span>共找到{{total}}条数据</span><el-button type="primary" @click="export_file()">导出</el-button></div>
-  <el-table :data="tableData" :element-loading-text="loading_text" border style="width: 100%">
+        <div><span>共找到{{total}}条数据</span><el-button type="primary" size="medium" style="margin:10px 10px" @click="export_file()">导出<i class="el-icon-upload el-icon--right"></i></el-button></div>
+  <el-table :data="tableData" :element-loading-text="loading_text" border style="width: 100%" stripe>
     <el-table-column v-for="(item, index) in column_list" :key="index" :prop="item" :label="item"></el-table-column>
   </el-table>
     </div>
   <el-button-group >
-    <el-button type="primary" icon="el-icon-arrow-left" @click="prePage()">上一页</el-button>
-    <el-button type="primary" @click="nextPage()">下一页<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+    <el-button type="primary" style="margin:15px 0px" size="medium" icon="el-icon-arrow-left" @click="prePage()">上一页</el-button>
+    <el-button type="primary" style="margin:15px 0px" size="medium" @click="nextPage()">下一页<i class="el-icon-arrow-right el-icon--right"></i></el-button>
   </el-button-group>
   </div>
 </template>
@@ -30,8 +30,7 @@ export default {
       loading: true,
       loading_text: '',
       column_list: [],
-      tableData: [
-      ],
+      tableData: [],
       post_data: {
         ids: [
           0,
