@@ -1,14 +1,14 @@
 <style rel="stylesheet/scss" lang="scss" scoped>
 </style>
 <template>
-    <div id="main" v-loading="loading" style="height: 100%">
-        <div id="left" style="width: 50%;height: 100%;overflow: auto;float: left">
-            <div id="pie" v-loading="loading" style="height: 220px; width: 450px">
+    <div id="main" style="height: 100%">
+        <div id="left" style="height: 100%;overflow: auto;float: left">
+            <div id="pie" v-loading="loading" style="height: 220px; width: 490px">
             </div>
-            <div id="bar" v-loading="loading" style="height: 220px; width: 450px">
+            <div id="bar" v-loading="loading" style="height: 220px; width: 490px">
             </div>
         </div>
-        <div id="right" style="width: 50%;height: 100%;overflow: auto;float: right">
+        <div id="right" style="height: 100%;overflow: auto;float: right">
             <div>
                 <el-select v-model="table_index" placeholder="请选择表格" @change="table_change()">
                     <el-option

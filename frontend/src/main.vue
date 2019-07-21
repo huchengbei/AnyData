@@ -55,7 +55,7 @@
     <el-container>
         <el-header>{{header}}</el-header>
         <el-container>
-            <el-header height="15px" style="padding-top: 20px">
+            <el-header height="15px" style="margin-top: 20px;margin-bottom: 10px;">
                 <el-breadcrumb separator-class="el-icon-arrow-right">
                     <el-breadcrumb-item><span v-html="step_one_label" @click="toStep(1)"></span></el-breadcrumb-item>
                     <el-breadcrumb-item><span v-html="step_two_label" @click="toStep(2)"></span></el-breadcrumb-item>
@@ -126,6 +126,8 @@ export default {
             }
         },
         toStep(step){
+            console.log('this step ' + this.step)
+            console.log('step ' + step)
           if (this.step <= step){
               return;
           }
@@ -142,18 +144,20 @@ export default {
           }
         },
         mountChooseFile(){
-          this.step_one_label = '<a href="">选择文件</a>';
+          this.step_one_label = '<a>选择文件</a>';
           this.step_two_label = '选择操作';
           this.step_three_label = '选择表格';
           this.step_four_label = '结果';
           this.chooseFile = new Vue(ChooseFile);
           this.chooseFile.tableData = this.files;
+          console.log(this.chooseFile.tableData)
           this.chooseFile.$mount('#main')
           this.step = 1;
+          console.log(this.step)
         },
         mountChooseOperation(){
-          this.step_one_label = '<a href="">选择文件</a>';
-          this.step_two_label = '<a href="">选择操作</a>';
+          this.step_one_label = '<a>选择文件</a>';
+          this.step_two_label = '<a>选择操作</a>';
           this.step_three_label = '选择表格>';
           this.step_four_label = '结果';
           if (this.chooseOperation != ''){
@@ -169,9 +173,9 @@ export default {
           this.step = 2;
         },
         mountChooseTable(){
-          this.step_one_label = '<a href="">选择文件</a>';
-          this.step_two_label = '<a href="">选择操作</a>';
-          this.step_three_label = '<a href="">选择表格</a>';
+          this.step_one_label = '<a>选择文件</a>';
+          this.step_two_label = '<a>选择操作</a>';
+          this.step_three_label = '<a>选择表格</a>';
           this.step_four_label = '结果';
           this.chooseTable = new Vue(ChooseTable);
           this.chooseTable.operation = this.chooseOperation.operation;
@@ -193,10 +197,10 @@ export default {
           this.step = 3;
         },
         mountShowResult(){
-          this.step_one_label = '<a href="">选择文件</a>';
-          this.step_two_label = '<a href="">选择操作</a>';
-          this.step_three_label = '<a href="">选择表格</a>';
-          this.step_four_label = '<a href="">结果</a>';
+          this.step_one_label = '<a>选择文件</a>';
+          this.step_two_label = '<a>选择操作</a>';
+          this.step_three_label = '<a>选择表格</a>';
+          this.step_four_label = '<a>结果</a>';
             this.showResult = new Vue(ShowResult);
             var post_data = {}
             post_data.start = 0;
@@ -212,10 +216,10 @@ export default {
             this.step = 4;
         },
         mountCharts(){
-          this.step_one_label = '<a href="">选择文件</a>';
-          this.step_two_label = '<a href="">选择操作</a>';
-          this.step_three_label = '<a href="">选择表格</a>';
-          this.step_four_label = '<a href="">分析结果</a>';
+          this.step_one_label = '<a>选择文件</a>';
+          this.step_two_label = '<a>选择操作</a>';
+          this.step_three_label = '<a>选择表格</a>';
+          this.step_four_label = '<a>分析结果</a>';
           this.charts = new Vue(Charts);
           var obj = this.chooseTable.get_condition();
           this.charts.tables = this.files;
