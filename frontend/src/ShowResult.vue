@@ -7,15 +7,21 @@
 <template>
   <div id="main" v-loading="loading">
     <div>
-        <div><span>共找到{{total}}条数据</span><el-button type="primary" size="medium" style="margin:10px 10px" @click="export_file()">导出<i class="el-icon-upload el-icon--right"></i></el-button></div>
-  <el-table :data="tableData" :element-loading-text="loading_text" border style="width: 100%" stripe>
-    <el-table-column v-for="(item, index) in column_list" :key="index" :prop="item" :label="item"></el-table-column>
-  </el-table>
+        <div style="margin:10px 0px">
+          <span>共找到{{total}}条数据</span>
+          <el-button type="primary" size="medium" style="margin:0px 10px" @click="export_file()">导出<i class="el-icon-upload el-icon--right"></i></el-button>
+        </div>
+        <el-table :data="tableData" :element-loading-text="loading_text" border style="width: 100%" stripe>
+          <el-table-column v-for="(item, index) in column_list" :key="index" :prop="item" :label="item"></el-table-column>
+        </el-table>
     </div>
-  <el-button-group >
-    <el-button type="primary" style="margin:15px 0px" size="medium" icon="el-icon-arrow-left" @click="prePage()">上一页</el-button>
-    <el-button type="primary" style="margin:15px 0px" size="medium" @click="nextPage()">下一页<i class="el-icon-arrow-right el-icon--right"></i></el-button>
-  </el-button-group>
+    <div style="float: right; margin:15px 5px">
+      <span>第1页/共8页</span>
+      <el-button-group  style="margin:0px 10px">
+        <el-button type="primary" size="medium" icon="el-icon-arrow-left" @click="prePage()">上一页</el-button>
+        <el-button type="primary" size="medium" @click="nextPage()">下一页<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+      </el-button-group>
+    </div>
   </div>
 </template>
 
