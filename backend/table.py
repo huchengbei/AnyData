@@ -19,7 +19,7 @@ class Table:
         elif suffix == '.xls':
             self.data = pd.read_excel(path, dtype='str')
         else:
-            pass
+            raise Exception
 
     def analyze_col(self, col_name):
         if col_name not in self.get_column_list():

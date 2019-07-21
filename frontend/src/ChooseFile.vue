@@ -207,10 +207,18 @@ export default {
           })
         }
       },
-      check_main_key() {
+      check() {
         var status = true;
+        if (this.tableData.length == 0){
+            alert('请传入Excel文件')
+            status = false
+            return  status;
+        }
         for (var item of this.tableData){
           status &= item.main_key_setted;
+        }
+        if (!status){
+          alert('请选择main_key');
         }
         return status;
       },

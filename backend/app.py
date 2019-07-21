@@ -55,7 +55,7 @@ def format_dict_to_list(source_data):
     return result
 
 
-def get_bar_chart_options(source_data,table_name, chart_name):
+def get_bar_chart_options(source_data, table_name, chart_name):
     data = list(source_data.values())
     keys = list(source_data.keys())
     chart = {
@@ -121,7 +121,7 @@ def get_bar_chart_options(source_data,table_name, chart_name):
     return result
 
 
-def get_pie_chart_options(source_data,table_name, chart_name):
+def get_pie_chart_options(source_data, table_name, chart_name):
     data = []
     for key, value in source_data.items():
         data.append({
@@ -148,9 +148,9 @@ def get_pie_chart_options(source_data,table_name, chart_name):
         'data': list(source_data.keys())
     }
     tooltip = {
-        'trigger': 'item',
-        'formatter': "{a} <br/>{b} : {c} ({d}%)"
-    },
+                  'trigger': 'item',
+                  'formatter': "{a} <br/>{b} : {c} ({d}%)"
+              },
     toolbox = {
         'show': True,
         'feature': {
@@ -236,10 +236,18 @@ def export():
 def load_data():
     if request.method == 'POST':
         path = request.form['path']
-        table = Table(path)
+        try:
+            table = Table(path)
+        except:
+            message = '请选择标准Excel文件'
+            return json.dumps({
+                'message': message,
+                'error': True
+            })
         app.tables += [table]
         table_id = len(app.tables) - 1
         return json.dumps({
+            "error": False,
             "id": table_id,
             "column_list": table.get_column_list()
         })

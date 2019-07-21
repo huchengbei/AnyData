@@ -12,7 +12,7 @@
       height: 100%;
   }
 
-  .el-header, .el-footer {
+  .homeBox > .el-container >.el-header, .homeBox > .el-container > .el-container > .el-container > .el-footer {
     background-color: #B3C0D1;
     color: #333;
     text-align: center;
@@ -55,16 +55,14 @@
     <el-container>
         <el-header>{{header}}</el-header>
         <el-container>
-            <el-aside width="20%">
-              <div style="height: 100%;overflow-y:hidden;">
-              <el-steps direction="vertical" :active="step" >
-                <el-step title="选择文件" @click.native="toStep(1)">aaa</el-step>
-                <el-step title="选择操作" @click.native="toStep(2)"></el-step>
-                <el-step title="选择使用的表格" @click.native="toStep(3)"></el-step>
-                <el-step title="结果"></el-step>
-              </el-steps>
-              </div>
-            </el-aside>
+            <el-header height="15px" style="padding-top: 20px">
+                <el-breadcrumb separator-class="el-icon-arrow-right">
+                    <el-breadcrumb-item><span v-html="step_one_label" @click="toStep(1)"></span></el-breadcrumb-item>
+                    <el-breadcrumb-item><span v-html="step_two_label" @click="toStep(2)"></span></el-breadcrumb-item>
+                    <el-breadcrumb-item><span v-html="step_three_label" @click="toStep(3)"></span></el-breadcrumb-item>
+                    <el-breadcrumb-item><span v-html="step_four_label" @click="toStep(4)"></span></el-breadcrumb-item>
+                </el-breadcrumb>
+            </el-header>
             <el-container>
                 <el-main>
                     <div id='main'></div>
@@ -93,6 +91,10 @@ export default {
       return {
         files: [],
         header: 'Header',
+        step_one_label: '',
+        step_two_label: '',
+        step_three_label: '',
+        step_four_label: '',
         step: 1,
         operation: '',
         chooseFile: '',
@@ -105,9 +107,7 @@ export default {
     methods: {
         nextStep(){
             if(this.step === 1) {
-                if(!this.chooseFile.check_main_key()){
-                    alert('请选择main_key');
-                }else{
+                if(this.chooseFile.check()){
                   this.files = this.chooseFile.tableData;
                   this.mountChooseOperation();
                   // this.mountCharts();
@@ -126,6 +126,9 @@ export default {
             }
         },
         toStep(step){
+          if (this.step <= step){
+              return;
+          }
           switch(step){
             case 1:
               this.mountChooseFile();
@@ -139,12 +142,20 @@ export default {
           }
         },
         mountChooseFile(){
+          this.step_one_label = '<a href="">选择文件</a>';
+          this.step_two_label = '选择操作';
+          this.step_three_label = '选择表格';
+          this.step_four_label = '结果';
           this.chooseFile = new Vue(ChooseFile);
           this.chooseFile.tableData = this.files;
           this.chooseFile.$mount('#main')
           this.step = 1;
         },
         mountChooseOperation(){
+          this.step_one_label = '<a href="">选择文件</a>';
+          this.step_two_label = '<a href="">选择操作</a>';
+          this.step_three_label = '选择表格>';
+          this.step_four_label = '结果';
           if (this.chooseOperation != ''){
               var chooseOperation = new Vue(ChooseOperation);
               chooseOperation.funnel_hidden = this.chooseOperation.funnel_hidden;
@@ -158,6 +169,10 @@ export default {
           this.step = 2;
         },
         mountChooseTable(){
+          this.step_one_label = '<a href="">选择文件</a>';
+          this.step_two_label = '<a href="">选择操作</a>';
+          this.step_three_label = '<a href="">选择表格</a>';
+          this.step_four_label = '结果';
           this.chooseTable = new Vue(ChooseTable);
           this.chooseTable.operation = this.chooseOperation.operation;
           var tableData = this.chooseFile.tableData;
@@ -178,6 +193,10 @@ export default {
           this.step = 3;
         },
         mountShowResult(){
+          this.step_one_label = '<a href="">选择文件</a>';
+          this.step_two_label = '<a href="">选择操作</a>';
+          this.step_three_label = '<a href="">选择表格</a>';
+          this.step_four_label = '<a href="">结果</a>';
             this.showResult = new Vue(ShowResult);
             var post_data = {}
             post_data.start = 0;
@@ -193,6 +212,10 @@ export default {
             this.step = 4;
         },
         mountCharts(){
+          this.step_one_label = '<a href="">选择文件</a>';
+          this.step_two_label = '<a href="">选择操作</a>';
+          this.step_three_label = '<a href="">选择表格</a>';
+          this.step_four_label = '<a href="">分析结果</a>';
           this.charts = new Vue(Charts);
           var obj = this.chooseTable.get_condition();
           this.charts.tables = this.files;
