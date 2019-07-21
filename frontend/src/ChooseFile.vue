@@ -147,16 +147,22 @@ export default {
               }]
             }).then(function(response) {
               var data = response.data;
-              var options = [];
-              for (var item of data['column_list']){
-                options.push({
-                  value: item,
-                  label: item
-                })
+              if (data.error){
+                  alert(data.message);
+                  that.tableData.splice(that.tableData.length - 1, 1);
+              }else{
+                var options = [];
+                for (var item of data['column_list']){
+                  options.push({
+                    value: item,
+                    label: item
+                  })
+                }
+                that.tableData[that.tableData.length - 1].options = options;
+                that.tableData[that.tableData.length - 1].id = data['id'];
+                that.tableData[that.tableData.length - 1].loading = false;
+
               }
-              that.tableData[that.tableData.length - 1].options = options;
-              that.tableData[that.tableData.length - 1].id = data['id'];
-              that.tableData[that.tableData.length - 1].loading = false;
             }).catch(function(error){
               console.log(error)
             })
