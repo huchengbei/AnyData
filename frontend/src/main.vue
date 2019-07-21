@@ -179,20 +179,7 @@ export default {
           this.step_four_label = '结果';
           this.chooseTable = new Vue(ChooseTable);
           this.chooseTable.operation = this.chooseOperation.operation;
-          var tableData = this.chooseFile.tableData;
-          var tables = [];
-          var list = [];
-          for (var index in tableData){
-            if ((index+1) % 3 == 0){
-              tables.push(list);
-              list = [];
-            }
-            list.push(tableData[index])
-          }
-          if (list.length != 0){
-              tables.push(list);
-          }
-          this.chooseTable.tables = tables;
+          this.chooseTable.tables = this.chooseFile.tableData;
           this.chooseTable.$mount('#main')
           this.step = 3;
         },

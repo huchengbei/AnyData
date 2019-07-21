@@ -31,30 +31,29 @@
 </style>
 <template>
   <div id="main">
-    <el-row :gutter="30" v-for="(row,index_r) in tables" :key="index_r">
-      <el-col :span="8" v-for="(col,index_c) in row" :key="index_c">
-        <el-badge value="√" class="item" type="primary" :hidden="col.hidden">
+    <el-row :gutter="30" v-for="(table,index) in tables" :key="index">
+        <el-badge value="√" class="item" type="primary" :hidden="table.hidden">
           <el-card class="grid-content bg-purple">
-            <el-button type="info" @click="use_table(col)" style="margin-bottom: 10px">
-              <div class="sub-title">{{col.fileName}}</div>
+            <el-button type="info" @click="use_table(table)" style="margin-bottom: 10px">
+              <div class="sub-title">{{table.fileName}}</div>
             </el-button>
-            <el-radio-group v-if="operation === 'funnel'" v-model="col.in">
+            <el-radio-group v-if="operation === 'funnel'" v-model="table.in">
               <el-radio
-                :disabled="col.hidden"
-                v-for="(item, index) in col.radio_options"
+                :disabled="table.hidden"
+                v-for="(item, index) in table.radio_options"
                 :key="index"
                 :label="item.exist"
               >{{item.label}}</el-radio>
             </el-radio-group>
             <el-select
                     v-else-if="operation === 'analyze'"
-                    :disabled="col.hidden"
-                    v-model="col.col_name"
+                    :disabled="table.hidden"
+                    v-model="table.col_name"
                     style="margin-left: 20px;"
                     placeholder="请选择列"
                     @change="col_change()">
               <el-option
-                      v-for="(item,index) in col.options"
+                      v-for="(item,index) in table.options"
                       :key="index"
                       :label="item.label"
                       :value="item.value">
@@ -62,7 +61,6 @@
             </el-select>
           </el-card>
         </el-badge>
-      </el-col>
     </el-row>
   </div>
 </template>
@@ -87,12 +85,10 @@ export default {
     get_condition() {
       var conditions = [];
       var tables_used = [];
-      for (var list of this.tables) {
-        for (var table of list) {
+      for (var table of this.tables) {
           if (!table.hidden){
             tables_used.push(table);
           }
-        }
       }
       if (this.operation === "funnel") {
         for (var table of tables_used) {
@@ -120,11 +116,9 @@ export default {
     check_condition() {
       var tables_used = [];
       var status = true;
-      for (var list of this.tables) {
-        for (var table of list) {
+      for (var table of this.tables) {
           if (!table.hidden){
             tables_used.push(table);
-          }
         }
       }
       if (this.operation === 'funnel'){
@@ -163,10 +157,9 @@ export default {
   },
   beforeMount() {
     for (var i in this.tables) {
-      for (var j in this.tables[i]) {
-        this.tables[i][j].hidden = true;
-        this.tables[i][j].col_name = '';
-        this.tables[i][j].radio_options = [
+        this.tables[i].hidden = true;
+        this.tables[i].col_name = '';
+        this.tables[i].radio_options = [
           {
             exist: 1,
             label: "在其中"
@@ -176,7 +169,6 @@ export default {
             label: "不在其中"
           }
         ];
-      }
     }
   }
 };
