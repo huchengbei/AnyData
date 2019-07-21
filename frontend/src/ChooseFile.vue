@@ -40,13 +40,13 @@
       <!-- el-input -->
       <el-input placeholder="点击左侧图标选择文件,仅支持.xls或.xlsx文件" v-model="fileSelected" :disabled="true">
         <template slot="prepend">
-          <el-button type="primary" @click="showOpenDialog()"><i class="el-icon-upload"></i></el-button>
+          <el-button type="primary" @click="showOpenDialog()"><i style="color:#409EFF" class="el-icon-upload"></i></el-button>
         </template>
       </el-input>
     </div>
     <div class="file-datatable">
       <div>
-        <el-tag>共对 {{tableData.length}} 个表格进行操作</el-tag>
+        <label>共对 {{tableData.length}} 个表格进行操作</label>
         <el-button type="danger" style="float: right; padding: 7px 2px" @click="reset">
           清除所有<i class="el-icon-delete-solid"></i>
         </el-button>
@@ -59,12 +59,10 @@
                 style="width: 100%">
         <el-table-column prop="filePath"
                          label="文件路径"
-                         align="center"
                          fixed >
         </el-table-column>
         <el-table-column prop="main_key"
                          label="主Key"
-                         align="center"
                          width="200">
           <template slot-scope="scope">
               <div v-if="scope.row.loading" align="center" style="font-size: 20px" >
@@ -83,12 +81,10 @@
         </el-table-column>
         <el-table-column prop="fileSize"
                          label="文件大小"
-                         align="center"
                          width="100">
         </el-table-column>
         <el-table-column label="操作"
                          fixed="right"
-                         align="center"
                          width="100">
           <template slot-scope="scope">
             <el-button type="danger" @click="removeRow(scope.row)" icon="el-icon-delete" circle></el-button>
@@ -147,22 +143,16 @@ export default {
               }]
             }).then(function(response) {
               var data = response.data;
-              if (data.error){
-                  alert(data.message);
-                  that.tableData.splice(that.tableData.length - 1, 1);
-              }else{
-                var options = [];
-                for (var item of data['column_list']){
-                  options.push({
-                    value: item,
-                    label: item
-                  })
-                }
-                that.tableData[that.tableData.length - 1].options = options;
-                that.tableData[that.tableData.length - 1].id = data['id'];
-                that.tableData[that.tableData.length - 1].loading = false;
-
+              var options = [];
+              for (var item of data['column_list']){
+                options.push({
+                  value: item,
+                  label: item
+                })
               }
+              that.tableData[that.tableData.length - 1].options = options;
+              that.tableData[that.tableData.length - 1].id = data['id'];
+              that.tableData[that.tableData.length - 1].loading = false;
             }).catch(function(error){
               console.log(error)
             })
@@ -207,18 +197,10 @@ export default {
           })
         }
       },
-      check() {
+      check_main_key() {
         var status = true;
-        if (this.tableData.length == 0){
-            alert('请传入Excel文件')
-            status = false
-            return  status;
-        }
         for (var item of this.tableData){
           status &= item.main_key_setted;
-        }
-        if (!status){
-          alert('请选择main_key');
         }
         return status;
       },
