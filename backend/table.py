@@ -23,7 +23,12 @@ class Table:
 
     def analyze_col(self, col_name):
         if col_name not in self.get_column_list():
-            return False;
+            return False
+        if col_name == self.main_key:
+            import copy
+            df = copy.deepcopy(self.data)
+            df.index = df.index.rename('序号')
+            return df.groupby(col_name).size()
         return self.data.groupby(col_name).size()
 
     def set_main_key(self, main_key):
