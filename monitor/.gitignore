@@ -1,6 +1,5 @@
 venv
 build
 dist
-resources
 *.spec
 *.pyc
