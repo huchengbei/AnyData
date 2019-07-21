@@ -96,7 +96,8 @@
                 table_index: '',
                 col_name: '',
                 cols: [],
-                default_id_col: {}
+                default_id_col: {},
+                tooltip: {}
             }
         },
         methods: {
@@ -107,6 +108,10 @@
             col_change(){
                 var id = this.tables[this.table_index].id;
                 this.refresh(id, this.col_name);
+            },
+            get_tooltip(colname){
+                return this.tooltip[colname]
+
             },
             refresh(table_id, col_name){
                 this.loading = true;
@@ -132,11 +137,29 @@
                     }]
                 }).then(function(response) {
                     var data = response.data;
+                    console.log(data);
                     chart_pie.setOption(data['pie']);
                     chart_bar.setOption(data['bar']);
                     that.rates = data['rates'];
                     that.datas = data['data_list'];
+                    that.tooltip = data['other_info'];
                     that.loading = false;
+                    chart_bar.setOption({
+                        tooltip: {
+                            formatter: function (params, ticker, callback) {
+                                // return that.get_tooltip(params.name)
+                                return params[0].seriesName + '<br/>' + that.tooltip[params[0].name];
+                            }
+                        }
+                    })
+                    chart_pie.setOption({
+                        tooltip: {
+                            formatter: function (params, ticker, callback) {
+                                // return that.get_tooltip(params.name)
+                                return params.seriesName + '<br/>' + that.tooltip[params.name];
+                            }
+                        }
+                    })
                 }).catch(function(error){
                     console.log(error)
                 })
