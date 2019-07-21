@@ -25,11 +25,13 @@ def analyze_table():
     if request.method == 'POST':
         table_id = int(request.form['id'])
         col_name = request.form['col_name']
-        data = get_col_analysis(table_id, col_name)
-        result = {'pie': get_pie_chart_options(data, app.tables[table_id].table_name, col_name + '-信息统计'),
-                  'bar': get_bar_chart_options(data, app.tables[table_id].table_name, col_name + '-分布'),
-                  'rates': get_all_rate(table_id),
-                  'data_list': format_dict_to_list(data)}
+        col_analyze = get_col_analysis(table_id, col_name)
+        result = {
+            'pie': get_pie_chart_options(col_analyze['data'], app.tables[table_id].table_name, col_name + '-信息统计'),
+            'bar': get_bar_chart_options(col_analyze['data'], app.tables[table_id].table_name, col_name + '-分布'),
+            'rates': get_all_rate(table_id),
+            'data_list': format_dict_to_list(col_analyze['data']),
+            'other_info': get_chart_other_info(col_analyze['data'], col_analyze['other_info'], col_name)}
         return result
     return 'error'
 
@@ -52,6 +54,20 @@ def format_dict_to_list(source_data):
             'total': value,
             'pre': str(round(int(value) * 100 / total, 2)) + '%'
         })
+    return result
+
+
+def get_chart_other_info(source_data, other_info, chart_name):
+    total = 0
+    for value in source_data.values():
+        total += value
+    result = {}
+    for key, value in source_data.items():
+        result[key] = key + ': ' + str(value) + ' (' + str(round(value * 100 / total, 2)) + ')%'
+    if other_info is not None:
+        result['其他'] = ''
+        for key, value in other_info.items():
+            result['其他'] += key + ': ' + str(value) + ' (' + str(round(value * 100 / total, 2)) + ')%' + '<br/>'
     return result
 
 
@@ -176,16 +192,29 @@ def get_pie_chart_options(source_data, table_name, chart_name):
 
 def get_col_analysis(table_id, col_name):
     table = app.tables[table_id]
-    data = table.analyze_col(col_name)
-    s = int(data.sum())
-    temp_list = list(sorted(data.items(), key=lambda x: -x[1]))[0:6]
-    temp_sum = 0
-    for item in temp_list:
-        temp_sum += item[1]
-    temp_list.append(('其他', s - temp_sum))
+    col_analyze = table.analyze_col(col_name)
     result = {}
-    for item in temp_list:
-        result[item[0]] = item[1]
+    data = {}
+    if len(col_analyze) <= 7:
+        for item in col_analyze.items():
+            data[item[0]] = item[1]
+        result['data'] = data
+        result['other_info'] = None
+        return result
+    s = int(col_analyze.sum())
+    list_all = list(sorted(col_analyze.items(), key=lambda x: -x[1]))
+    data_list = list_all[0:6]
+    temp_sum = 0
+    for item in data_list:
+        temp_sum += item[1]
+    data_list.append(('其他', s - temp_sum))
+    for item in data_list:
+        data[item[0]] = item[1]
+    result['data'] = data
+    temp_list = {}
+    for item in list_all[6:10]:
+        temp_list[item[0]] = item[1]
+    result['other_info'] = temp_list
     return result
 
 
