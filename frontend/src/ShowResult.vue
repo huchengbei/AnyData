@@ -16,7 +16,7 @@
         </el-table>
     </div>
     <div style="float: right; margin:15px 5px">
-      <span>第1页/共8页</span>
+      <span>第{{page_now}}页/共{{page_total}}页</span>
       <el-button-group  style="margin:0px 10px">
         <el-button type="primary" size="medium" icon="el-icon-arrow-left" @click="prePage()">上一页</el-button>
         <el-button type="primary" size="medium" @click="nextPage()">下一页<i class="el-icon-arrow-right el-icon--right"></i></el-button>
@@ -37,14 +37,9 @@ export default {
       loading_text: '',
       column_list: [],
       tableData: [],
-      post_data: {
-        ids: [
-          0,
-          1
-        ],
-        start: 2,
-        num: 20
-      }
+      post_data: {},
+      page_now: '',
+      page_total: ''
     };
   },
   methods: {
@@ -86,6 +81,8 @@ export default {
       this.tableData = data['data'];
       this.loading = false;
       this.total = data.total;
+      this.page_now = data.page_now;
+      this.page_total = data.page_total;
     },
     prePage(){
       var num = this.post_data.num;
