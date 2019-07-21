@@ -72,7 +72,7 @@
           <el-select
                   :disabled="scope.row.hidden"
                   v-model="scope.row.col_name"
-                  style="margin-left: 20px; font-size: 17px"
+                  style="font-size: 17px"
                   placeholder="请选择列"
                   @change="col_change">
             <el-option
