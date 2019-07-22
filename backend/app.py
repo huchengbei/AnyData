@@ -337,6 +337,8 @@ def funnel():
 
         response_data = dict()
         response_data['total'] = total
+        response_data['page_now'] = int(end / num)
+        response_data['page_total'] = int((total + num - 1) / num)
         response_data['next_start'] = end
         response_data['column_list'] = column_list
         response_data['data'] = result.to_dict('records')
@@ -406,6 +408,8 @@ def diff():
         end = start + num if start + num < total else total
         response_data = dict()
         response_data['total'] = total
+        response_data['page_now'] = int(end / num)
+        response_data['page_total'] = int((total + num - 1) / num)
         response_data['next_start'] = end
         response_data['column_list'] = column_list
         response_data['data'] = result_all[start:end].to_dict('records')
