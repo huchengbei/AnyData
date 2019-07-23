@@ -76,8 +76,8 @@
                   placeholder="请选择列"
                   @change="col_change">
             <el-option
-                    v-for="item in scope.row.options"
-                    :key="item.value"
+                    v-for="(item,index) in scope.row.options"
+                    :key="index"
                     :label="item.label"
                     :value="item.value">
             </el-option>
@@ -188,7 +188,7 @@
     beforeMount() {
       for (var i in this.tables) {
         this.tables[i].hidden = true;
-        this.tables[i].col_name = '';
+        this.$set(this.tables[i], 'col_name', '')
         this.tables[i].radio_options = [
           {
             exist: 1,
