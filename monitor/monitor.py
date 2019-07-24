@@ -4,14 +4,25 @@ import time
 from typing import Union
 from configparser import ConfigParser
 import psutil
+import win32gui
+from win32.lib import win32con
 
 CONFIGFILE = 'config.ini'
+if not os.path.exists(CONFIGFILE):
+    win32gui.MessageBox(0, "找不到配置文件", "提醒", win32con.MB_OK)
+    exit()
 config = ConfigParser()
 config.read(CONFIGFILE)
 back_exe = config.get('backend', 'path')
 back_name = config.get('backend', 'name')
 front_exe = config.get('frontend', 'path')
 front_name = config.get('frontend', 'name')
+if not os.path.exists(back_exe[1:-1]):
+    win32gui.MessageBox(0, "后端程序配置文件错误", "提醒", win32con.MB_OK)
+    exit()
+if not os.path.exists(front_exe[1:-1]):
+    win32gui.MessageBox(0, "前端程序配置文件错误", "提醒", win32con.MB_OK)
+    exit()
 
 front = subprocess.Popen(front_exe, shell=True)
 back = subprocess.Popen(back_exe, shell=True)
@@ -33,9 +44,8 @@ def main(front_pid, back_pid):
         print("Server is running...")
         print('')
     else:
-        print('Server is not running,Begin to Restart Server...')
-        os.system('taskkill /f /pid %s' % back_pid)
-        print(time.strftime('%Y-%m-%d %H:%M:%S --%A--%c', time.localtime()))
+        os.system('taskkill /f /im %s' % back_name)
+        # os.system('taskkill /f /pid %s' % back_pid)
         status = False
     del ProList[:]
     return status
