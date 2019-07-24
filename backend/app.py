@@ -273,6 +273,10 @@ def load_data():
                 'message': message,
                 'error': True
             })
+        status = table.check_columns()
+        print(status)
+        if status['error']:
+            return status
         app.tables += [table]
         table_id = len(app.tables) - 1
         return json.dumps({

@@ -91,6 +91,7 @@ def test8():
     print(df.loc['cobra'])
     print(['']*3)
 
+
 def test9():
     the_poor = Table('resources/the_poors.csv')
     ana = the_poor.analyze_col('民族')
@@ -99,6 +100,16 @@ def test9():
     print(ana)
 
 
+def test10():
+    the_poor = Table('resources/the_poors.csv')
+    columns = the_poor.data.columns
+    print(columns)
+    for item in columns:
+        if '.1' in item:
+            print('ddddddddddddddd')
+    print(type(columns[7]))
+    print(type(columns))
+    print(columns.is_unique)
 
 
-test9()
+test10()

@@ -1,6 +1,7 @@
 import os
 
 import pandas as pd
+
 pd.set_option('display.max_columns', None)
 
 
@@ -20,6 +21,21 @@ class Table:
             self.data = pd.read_excel(path, dtype='str')
         else:
             raise Exception
+
+    def check_columns(self):
+        columns = self.data.columns
+        result = {}
+        for item in columns:
+            if 'Unnamed' in item:
+                result['error'] = True
+                result['message'] = '请删除未命名列或为空列名赋值'
+                return result
+            if '.1' in item:
+                result['error'] = True
+                result['message'] = '请保持每个列名唯一，或删除重复列'
+                return result
+        result['error'] = False
+        return result
 
     def analyze_col(self, col_name):
         if col_name not in self.get_column_list():
