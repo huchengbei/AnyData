@@ -53,10 +53,10 @@
 <template>
   <div class="homeBox">
     <el-container>
-        <el-header>{{header}}</el-header>
+        <el-header style="margin-bottom:30px; weight:1034px; height:60px; background-image: url(/Users/gilgamesh/Projects/qianYang/AnyData/frontend/src/static/images/header.png); "></el-header>
         <el-container>
-            <el-header height="15px" style="margin-top: 20px;margin-bottom: 10px;">
-                <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-header height="30px" >
+                <el-breadcrumb separator-class="el-icon-arrow-right" style="font-size:15px;">
                     <el-breadcrumb-item><span v-html="step_one_label" @click="toStep(1)"></span></el-breadcrumb-item>
                     <el-breadcrumb-item><span v-html="step_two_label" @click="toStep(2)"></span></el-breadcrumb-item>
                     <el-breadcrumb-item><span v-html="step_three_label" @click="toStep(3)"></span></el-breadcrumb-item>
@@ -67,7 +67,7 @@
                 <el-main>
                     <div id='main'></div>
                 </el-main>
-                <el-footer>
+                <el-footer style="background: white; margin-bottom: 50px;">
                     <el-button type="primary" @click="nextStep()">下一步</el-button>
                 </el-footer>
             </el-container>
@@ -90,7 +90,7 @@ export default {
     data() {
       return {
         files: [],
-        header: 'Header',
+        header: '易分析',
         step_one_label: '',
         step_two_label: '',
         step_three_label: '',

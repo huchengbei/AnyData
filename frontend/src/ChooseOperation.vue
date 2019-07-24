@@ -34,17 +34,17 @@
 <el-row :gutter="30" >
   <el-col :span="8" style="align-content: center;">
     <div>
-      <el-button type="primary" style="margin-left:30px; width:250px; height:250px; background-image: url(/Users/zhiyi/Desktop/AnyData-master/frontend/src/static/images/funnel.jpg);" plain @click="choose_funnel"></el-button>
+      <el-button type="primary" style="margin-left:30px; width:250px; height:250px; background-image: url(static/images/funnel.jpg);" plain @click="choose_funnel"></el-button>
     </div>
   </el-col>
   <el-col :span="8">
     <div>
-      <el-button type="danger" style="margin-left:30px; width:250px; height:250px; background-image: url(/Users/zhiyi/Desktop/AnyData-master/frontend/src/static/images/diff.jpg);" plain @click="choose_diff"></el-button>
+      <el-button type="danger" style="margin-left:30px; width:250px; height:250px; background-image: url(static/images/diff.jpg);" plain @click="choose_diff"></el-button>
     </div>
   </el-col>
   <el-col :span="8">
     <div>
-      <el-button type="warning" style="margin-left:30px; width:250px; height:250px; background-image: url(/Users/zhiyi/Desktop/AnyData-master/frontend/src/static/images/analyze.jpg)" plain @click="choose_analyze"></el-button>
+      <el-button type="warning" style="margin-left:30px; width:250px; height:250px; background-image: url(static/images/analyze.jpg)" plain @click="choose_analyze"></el-button>
     </div>
   </el-col>
 </el-row>
