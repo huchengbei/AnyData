@@ -36,18 +36,18 @@
     <div class="clearfix">
     </div>
   <div class="file-container">
-    <div class="file-selecter">
+    <div class="file-selecter" style="padding:0px">
       <!-- el-input -->
       <el-input placeholder="点击左侧图标选择文件,仅支持.xls或.xlsx文件" v-model="fileSelected" :disabled="true">
         <template slot="prepend">
-          <el-button type="primary" @click="showOpenDialog()"><i style="color:#409EFF" class="el-icon-upload"></i></el-button>
+          <el-button style="background: #409EFF" type="primary" @click="showOpenDialog()"><i class="el-icon-document-add" style="color:white;"></i></el-button>
         </template>
       </el-input>
     </div>
     <div class="file-datatable">
       <div>
         <label>共对 {{tableData.length}} 个表格进行操作</label>
-        <el-button type="danger" style="float: right; padding: 7px 2px" @click="reset">
+        <el-button type="danger" style="float: right; padding: 7px 4px; " @click="reset">
           清除所有<i class="el-icon-delete-solid"></i>
         </el-button>
       </div>

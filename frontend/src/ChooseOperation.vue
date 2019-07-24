@@ -30,23 +30,23 @@
   }
 </style>
 <template>
-<div id="main">
+<div id="main" style="margin-top:10%">
 <el-row :gutter="30" >
-  <el-col :span="8"><div class="grid-content bg-purple">
-    <el-badge value="√" class="item" type="primary" :hidden="funnel_hidden">
-      <el-button size="big" type="primary" plain @click="choose_funnel">筛选</el-button>
-    </el-badge>
-    </div></el-col>
-  <el-col :span="8"><div class="grid-content bg-purple">
-    <el-badge value="√" class="item" type="primary" :hidden="diff_hidden">
-      <el-button size="big" type="info" plain @click="choose_diff">对比</el-button>
-    </el-badge>
-  </div></el-col>
-  <el-col :span="8"><div class="grid-content bg-purple">
-    <el-badge value="√" class="item" type="primary" :hidden="analyze_hidden">
-      <el-button size="big" type="info" plain @click="choose_analyze">分析</el-button>
-    </el-badge>
-    </div></el-col>
+  <el-col :span="8" style="align-content: center;">
+    <div>
+      <el-button type="primary" style="margin-left:30px; width:250px; height:250px; background-image: url(/Users/zhiyi/Desktop/AnyData-master/frontend/src/static/images/funnel.jpg);" plain @click="choose_funnel"></el-button>
+    </div>
+  </el-col>
+  <el-col :span="8">
+    <div>
+      <el-button type="danger" style="margin-left:30px; width:250px; height:250px; background-image: url(/Users/zhiyi/Desktop/AnyData-master/frontend/src/static/images/diff.jpg);" plain @click="choose_diff"></el-button>
+    </div>
+  </el-col>
+  <el-col :span="8">
+    <div>
+      <el-button type="warning" style="margin-left:30px; width:250px; height:250px; background-image: url(/Users/zhiyi/Desktop/AnyData-master/frontend/src/static/images/analyze.jpg)" plain @click="choose_analyze"></el-button>
+    </div>
+  </el-col>
 </el-row>
 </div>
 </template>
