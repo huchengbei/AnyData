@@ -85,4 +85,4 @@ if __name__ == "__main__":
     while front_pid is False:
         front_pid = check_front()
     while main(front_pid, back_pid):
-        time.sleep(10)
+        time.sleep(2)
