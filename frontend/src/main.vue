@@ -53,7 +53,7 @@
 <template>
   <div class="homeBox">
     <el-container>
-        <el-header style="margin-bottom:30px; weight:1034px; height:60px; background-image: url(/Users/gilgamesh/Projects/qianYang/AnyData/frontend/src/static/images/header.png); "></el-header>
+        <el-header style="margin-bottom:30px; weight:1034px; height:60px; background-image: url(static/images/header.png); "></el-header>
         <el-container>
             <el-header height="30px" >
                 <el-breadcrumb separator-class="el-icon-arrow-right" style="font-size:15px;">
