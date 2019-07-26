@@ -31,15 +31,15 @@ back = subprocess.Popen(back_exe, shell=True)
 ProList = []
 
 
-def main(front_pid, back_pid):
+def main():
     for proc in psutil.process_iter():
         try:
-            ProList.append(proc.pid)
+            ProList.append(proc.name)
         except psutil.NoSuchProcess:
             pass
 
     status = True
-    if front_pid in ProList:
+    if front_name in ProList:
         print('')
         print("Server is running...")
         print('')
@@ -60,7 +60,7 @@ def check_back():
             pass
     for item in proc_list:
         if back_name == item['name']:
-            return item['pid']
+            return True
     return False
 
 
@@ -73,16 +73,16 @@ def check_front():
             pass
     for item in proc_list:
         if front_name == item['name']:
-            return item['pid']
+            return True
     return False
 
 
 if __name__ == "__main__":
-    back_pid: Union[int, bool] = check_back()
-    while back_pid is False:
-        back_pid = check_back()
-    front_pid: Union[int, bool] = check_front()
-    while front_pid is False:
-        front_pid = check_front()
-    while main(front_pid, back_pid):
+    back_status = check_back()
+    while back_status is False:
+        back_status = check_back()
+    front_status = check_front()
+    while front_status is False:
+        front_status = check_front()
+    while main():
         time.sleep(2)
