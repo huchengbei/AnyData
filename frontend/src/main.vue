@@ -213,6 +213,7 @@ export default {
           this.charts.default_id_col['id'] = obj['id'];
           this.charts.default_id_col['col_name'] = obj['col_name'];
           this.charts.$mount('#main')
+          this.step = 4;
         },
     },
     mounted() {
