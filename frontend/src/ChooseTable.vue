@@ -49,20 +49,20 @@
       <el-table-column
               v-if="operation === 'funnel'"
               label="是否在该表中"
-              width="400"
-              fixed="right">
+              width="300">
         <template slot-scope="scope">
-          <el-radio-group
+          <el-switch
                   v-model="scope.row.in"
-                  style="font-size: 17px">
-            <el-radio
-                    :disabled="scope.row.hidden"
-                    v-for="item in scope.row.radio_options"
-                    :label="item.exist"
-            >{{item.label}}</el-radio>
-          </el-radio-group>
+                  :disabled="scope.row.hidden">
+          </el-switch>
         </template>
       </el-table-column>
+        <el-table-column
+                v-if="operation === 'funnel'"
+                label="选择主表格"
+                width="300"
+                fixed="right">
+        </el-table-column>
       <el-table-column
               v-if="operation === 'analyze'"
               label="要分析的列"
