@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import copy
-from functools import reduce
 
 import pandas as pd
 from flask import Flask, request
@@ -274,7 +273,6 @@ def load_data():
                 'error': True
             })
         status = table.check_columns()
-        print(status)
         if status['error']:
             return status
         app.tables += [table]
@@ -320,15 +318,20 @@ def funnel():
         if not isinstance(request_data, dict) or 'condition' not in request_data.keys():
             return 'error'
         condition = request_data['condition']
+        if 'main_table_id' not in request_data.keys():
+            return 'error'
+        main_table_id = int(request_data['main_table_id'])
         if not isinstance(condition, list) or len(condition) > len(app.tables):
             return 'error'
         start = request_data['start'] if 'start' in request_data.keys() else 0
         num = request_data['num'] if 'num' in request_data.keys() else 10
 
         condition = sorted(condition, key=lambda x: x['id'])
-        if 'funnel' not in app.current_result.keys() or app.current_result['funnel']['condition'] != condition:
-            result_all, column_list = get_funnel_data(condition)
+        if 'funnel' not in app.current_result.keys() or app.current_result['funnel']['main_table_id'] != main_table_id \
+                or app.current_result['funnel']['condition'] != condition:
+            result_all, column_list = get_funnel_data(condition, main_table_id)
             app.current_result['funnel'] = {
+                'main_table_id': main_table_id,
                 'condition': condition,
                 'result': (result_all, column_list)
             }
@@ -350,11 +353,11 @@ def funnel():
         return json.dumps(response_data)
 
 
-def get_funnel_data(condition):
+def get_funnel_data(condition, main_table_id):
     be_in = list()
     be_out = set()
     common_column = list()
-    fixed_table = None
+    fixed_table = app.tables[main_table_id]
     for item in condition:
         table_id = item['id']
         exist = item['exist']
@@ -365,8 +368,6 @@ def get_funnel_data(condition):
         else:
             common_column = intersection_safe(common_column, table.get_column_list())
         if exist is 1:
-            if fixed_table is None:
-                fixed_table = table
             if len(be_in) is 0:
                 be_in = table[main_key]
             else:
@@ -374,16 +375,15 @@ def get_funnel_data(condition):
         elif exist is 0:
             be_out = union(be_out, table[main_key])
 
-    if '序号' in common_column:
-        common_column.remove('序号')
     be_in = difference_safe(be_in, be_out)
-    if fixed_table.main_key not in common_column:
-        common_column = [fixed_table.main_key] + common_column
-    result_all = fixed_table.get_list_by_list_columns(be_in, common_column)
+    columns = fixed_table.get_column_list()
+    columns.remove('序号')
+    result_all = fixed_table.get_list_by_list_columns(be_in, columns)
     index = pd.Series(range(1, len(result_all) + 1))
-    index.rename('序号', inplace=True)
+    index.rename('xh', inplace=True)
     result_all.index = index
-    return result_all, common_column
+    result_all.insert(0, '序号', result_all.index)
+    return result_all, result_all.columns.tolist()
 
 
 @app.route('/diff', methods=['POST'])
@@ -480,5 +480,5 @@ def get_diff_data(ids):
 
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    app.run()
+    app.run(debug=True)
+    # app.run()
