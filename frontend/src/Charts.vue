@@ -1,7 +1,7 @@
 <style rel="stylesheet/scss" lang="scss" scoped>
 </style>
 <template>
-    <div id="main" style="height: 100%; width:100%;">
+    <div id="main" style="height: 100%;overflow-y: hidden; width:100%;">
         <div id="left" style="height: 100%;overflow: auto;float: left">
             <div id="pie" v-loading="loading" style="height: 250px; width: 600px;">
             </div>
@@ -37,7 +37,7 @@
                     <el-table-column
                             prop="table_name"
                             label="表名"
-                            width="400px">
+                            width="260px">
                     </el-table-column>
                     <el-table-column
                             prop="total"
@@ -48,7 +48,7 @@
                             prop="in"
                             sortable
                             label="在其中数"
-                            width="100px">
+                            width="110">
                     </el-table-column>
                     <el-table-column
                             prop="pre"
@@ -57,7 +57,7 @@
                     </el-table-column>
                 </el-table>
             </div>
-            <div id="table" v-loading="loading" style="height: auto; width: 540px;">
+            <div id="table" v-loading="loading" style="height: auto;overflow: auto; width: 540px;">
                 <el-table
                         :data="datas"
                         border
@@ -85,7 +85,6 @@
 
 <script>
     import axios from 'axios'
-    import qs from 'qs'
     export default {
         name: "Charts",
         data() {
@@ -125,18 +124,18 @@
                 require('echarts/lib/component/title');
                 let chart_pie = echarts.init(document.getElementById('pie'));
                 let chart_bar = echarts.init(document.getElementById('bar'));
-                var that = this;
-                axios.post('http://127.0.0.1:5000/analyze_table', {
+                var ids = []
+                for (var item of this.tables){
+                    ids.push(item.id)
+                }
+                var post_data = {
                     id: table_id,
                     col_name: col_name,
-                }, {
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
-                    },
-                    transformRequest: [function(data){
-                        return qs.stringify(data)
-                    }]
-                }).then(function(response) {
+                    ids: ids,
+                }
+                var that = this;
+                axios.post('http://127.0.0.1:5000/analyze_table', post_data)
+                    .then(function(response) {
                     var data = response.data;
                     console.log(data);
                     chart_pie.setOption(data['pie']);
