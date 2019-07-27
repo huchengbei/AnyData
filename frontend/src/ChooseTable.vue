@@ -170,12 +170,18 @@
             status = false;
             return status;
           }
+          var flag = false
           for( table of tables_used){
             if (table.in == undefined){
               alert("请对每一个筛选的表格确定是否需要在其中");
               status = false;
               return status;
             }
+            flag = flag || table.isMain
+          }
+          if (!flag) {
+            alert("请选择一个在其中的表作为主表")
+            return false;
           }
         }else if (this.operation === 'diff'){
           if(tables_used.length != 2){

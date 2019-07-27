@@ -3,9 +3,9 @@
 <template>
     <div id="main" style="height: 100%; width:100%;">
         <div id="left" style="height: 100%;overflow: auto;float: left">
-            <div id="pie" v-loading="loading" style="height: 220px; width: 500px;">
+            <div id="pie" v-loading="loading" style="height: 250px; width: 600px;">
             </div>
-            <div id="bar" v-loading="loading" style="height: 220px; width: 500px;">
+            <div id="bar" v-loading="loading" style="height: 250px; width: 600px;">
             </div>
         </div>
         <div id="right" style="height: 100%; overflow: auto; float: right">
@@ -31,10 +31,9 @@
                     </el-option>
                 </el-select>
             </div>
-            <div id="rate" style="height: auto; width:auto;">
+            <div id="rate" style="height: auto; width:540px;">
                 <el-table
-                        :data="rates"
-                        style="width: 620px; height:100%;">
+                        :data="rates">
                     <el-table-column
                             prop="table_name"
                             label="表名"
@@ -58,7 +57,7 @@
                     </el-table-column>
                 </el-table>
             </div>
-            <div id="table" v-loading="loading" style="height: 220px; width: 620px">
+            <div id="table" v-loading="loading" style="height: auto; width: 540px;">
                 <el-table
                         :data="datas"
                         border
