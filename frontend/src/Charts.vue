@@ -1,14 +1,14 @@
 <style rel="stylesheet/scss" lang="scss" scoped>
 </style>
 <template>
-    <div id="main" style="height: 100%">
+    <div id="main" style="height: 100%; width:100%;">
         <div id="left" style="height: 100%;overflow: auto;float: left">
-            <div id="pie" v-loading="loading" style="height: 220px; width: 490px">
+            <div id="pie" v-loading="loading" style="height: 220px; width: 500px;">
             </div>
-            <div id="bar" v-loading="loading" style="height: 220px; width: 490px">
+            <div id="bar" v-loading="loading" style="height: 220px; width: 500px;">
             </div>
         </div>
-        <div id="right" style="height: 100%;overflow: auto;float: right">
+        <div id="right" style="height: 100%; overflow: auto; float: right">
             <div>
                 <el-select v-model="table_index" placeholder="请选择表格" @change="table_change()">
                     <el-option
@@ -31,13 +31,14 @@
                     </el-option>
                 </el-select>
             </div>
-            <div id="rate" style="height: 220px; width: 450px">
+            <div id="rate" style="height: auto; width:auto;">
                 <el-table
                         :data="rates"
-                        style="width: 100%">
+                        style="width: 640px; height:100%;">
                     <el-table-column
                             prop="table_name"
-                            label="表名">
+                            label="表名"
+                            width="400px">
                     </el-table-column>
                     <el-table-column
                             prop="total"
@@ -47,7 +48,8 @@
                     <el-table-column
                             prop="in"
                             sortable
-                            label="在其中数">
+                            label="在其中数"
+                            width="100px">
                     </el-table-column>
                     <el-table-column
                             prop="pre"
@@ -56,7 +58,7 @@
                     </el-table-column>
                 </el-table>
             </div>
-            <div id="table" v-loading="loading" style="height: 220px; width: 450px">
+            <div id="table" v-loading="loading" style="height: 220px; width: 640px">
                 <el-table
                         :data="datas"
                         border

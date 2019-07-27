@@ -9,7 +9,7 @@
     }
   }
   .text {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .item {
@@ -38,7 +38,7 @@
   <div class="file-container">
     <div class="file-selecter" style="padding:0px">
       <!-- el-input -->
-      <el-input placeholder="点击左侧图标选择文件,仅支持.xls或.xlsx文件" v-model="fileSelected" :disabled="true">
+      <el-input style="font-size:15px;" placeholder="点击左侧图标选择文件,仅支持.xls或.xlsx文件" v-model="fileSelected" :disabled="true">
         <template slot="prepend">
           <el-button style="background: #409EFF" type="primary" @click="showOpenDialog()"><i class="el-icon-document-add" style="color:white;"></i></el-button>
         </template>
@@ -46,7 +46,7 @@
     </div>
     <div class="file-datatable">
       <div>
-        <label>共对 {{tableData.length}} 个表格进行操作</label>
+        <label style="font-size:15px;">共对 {{tableData.length}} 个表格进行操作</label>
         <el-button type="danger" style="float: right; padding: 7px 4px; " @click="reset">
           清除所有<i class="el-icon-delete-solid"></i>
         </el-button>
@@ -65,7 +65,7 @@
                          label="主Key"
                          width="200">
           <template slot-scope="scope">
-              <div v-if="scope.row.loading" align="center" style="font-size: 20px" >
+              <div v-if="scope.row.loading" align="center" style="font-size: 15px" >
                 <i class="el-icon-loading is-big"></i>
               </div>
           <el-select v-else v-model="scope.row.main_key"placeholder="点击选择主键" :loading="scope.row.loading"

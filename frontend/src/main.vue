@@ -67,7 +67,7 @@
                 <el-main>
                     <div id='main'></div>
                 </el-main>
-                <el-footer v-if="step != 4" style="background: white; margin-bottom: 50px;">
+                <el-footer v-if="step != 4 && step != 2" style="background: white; margin-bottom: 50px;">
                     <el-button type="primary" @click="nextStep()">下一步</el-button>
                 </el-footer>
             </el-container>
@@ -169,6 +169,7 @@ export default {
           }else{
             this.chooseOperation = new Vue(ChooseOperation);
           }
+          this.chooseOperation.parent = this
           this.chooseOperation.$mount('#main')
           this.step = 2;
         },

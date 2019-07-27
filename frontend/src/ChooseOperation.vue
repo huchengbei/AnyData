@@ -60,6 +60,7 @@ export default {
         diff_hidden: true,
         analyze_hidden: true,
         operation: '',
+        parent:'',
      }
     },
     methods: {
@@ -68,22 +69,25 @@ export default {
         this.diff_hidden=true;
         this.analyze_hidden=true;
         this.operation="funnel";
+        this.parent.nextStep();
       },
       choose_diff() {
         this.funnel_hidden=true;
         this.diff_hidden=false;
         this.analyze_hidden=true;
         this.operation="diff";
+        this.parent.nextStep();
       },
       choose_analyze() {
         this.funnel_hidden=true;
         this.diff_hidden=true;
         this.analyze_hidden=false;
         this.operation="analyze";
+        this.parent.nextStep();
       },
       check_operation(){
         return this.funnel_hidden || this.diff_hidden || this.analyze_hidden;
-      }
+      },
     }
   }
 </script>
