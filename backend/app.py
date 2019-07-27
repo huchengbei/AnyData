@@ -22,13 +22,23 @@ def hello_world():
 @app.route('/analyze_table', methods=['POST'])
 def analyze_table():
     if request.method == 'POST':
-        table_id = int(request.form['id'])
-        col_name = request.form['col_name']
+        request_data = request.get_json()
+        if not isinstance(request_data, dict):
+            return 'error'
+        if 'id' not in request_data.keys():
+            return 'error'
+        if 'col_name' not in request_data.keys():
+            return 'error'
+        if 'ids' not in request_data.keys():
+            return 'error'
+        table_id = int(request_data['id'])
+        col_name = request_data['col_name']
+        ids = request_data['ids']
         col_analyze = get_col_analysis(table_id, col_name)
         result = {
             'pie': get_pie_chart_options(col_analyze['data'], app.tables[table_id].table_name, col_name + '-信息统计'),
             'bar': get_bar_chart_options(col_analyze['data'], app.tables[table_id].table_name, col_name + '-分布'),
-            'rates': get_all_rate(table_id),
+            'rates': get_all_rate(table_id, ids),
             'data_list': format_dict_to_list(col_analyze['data']),
             'other_info': get_chart_other_info(col_analyze['data'], col_analyze['other_info'], col_name)}
         return result
@@ -217,14 +227,16 @@ def get_col_analysis(table_id, col_name):
     return result
 
 
-def get_all_rate(table_id):
+def get_all_rate(table_id, ids):
     result = []
     fix_table = app.tables[table_id]
-    fix_ids = fix_table[fix_table.main_key]
-    for table in app.tables:
-        ids = table[table.main_key]
-        be_in = intersection(ids, fix_ids)
-        len_ids = len(ids)
+    fix_main_keys = fix_table[fix_table.main_key]
+    # for table in app.tables:
+    for table_id in ids:
+        table = app.tables[table_id]
+        main_keys = table[table.main_key]
+        be_in = intersection(main_keys, fix_main_keys)
+        len_ids = len(main_keys)
         len_be_in = len(be_in)
         result.append({
             'table_name': table.table_name,
