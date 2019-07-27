@@ -43,8 +43,6 @@ def is_digit(x):
 
 
 def sfz_format(x):
-    s = x.replace('x', 'X')
-    print(s)
     return x.replace('x', 'X')
 
 

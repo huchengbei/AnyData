@@ -100,7 +100,7 @@ def get_bar_chart_options(source_data, table_name, chart_name):
     title = {
         'text': chart_name,
         'subtext': table_name,
-        'left': 'center'
+        'left': 'left'
     }
     result = {
         'title': title,

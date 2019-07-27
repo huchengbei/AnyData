@@ -74,10 +74,8 @@ class Table:
                 if not is_digit(x):
                     status = False
                     break
-        print(self.data)
         if status:
             self.data[col_name] = self.data[col_name].map(lambda sfz: sfz_format(sfz))
-        print(self.data)
 
     def rename(self, *args, **kw):
         self.data = self.data.rename(*args, **kw)
