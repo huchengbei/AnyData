@@ -54,7 +54,6 @@
       <el-table v-loading="isLoading"
                 element-loading-text="拼命加载中"
                 :data="tableData"
-                :default-sort = "{prop: 'filePath', order: 'descending'}"
                 stripe
                 style="width: 100%">
         <el-table-column prop="filePath"

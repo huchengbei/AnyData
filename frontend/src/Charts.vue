@@ -34,7 +34,7 @@
             <div id="rate" style="height: auto; width:auto;">
                 <el-table
                         :data="rates"
-                        style="width: 640px; height:100%;">
+                        style="width: 620px; height:100%;">
                     <el-table-column
                             prop="table_name"
                             label="表名"
@@ -58,7 +58,7 @@
                     </el-table-column>
                 </el-table>
             </div>
-            <div id="table" v-loading="loading" style="height: 220px; width: 640px">
+            <div id="table" v-loading="loading" style="height: 220px; width: 620px">
                 <el-table
                         :data="datas"
                         border

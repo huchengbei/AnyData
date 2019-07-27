@@ -71,8 +71,7 @@
           <el-switch
                   v-model="scope.row.isMain"
                   :disabled="scope.row.hidden"
-                  @change="chooseMainTable(scope.row)"
-                  >
+                  @change="chooseMainTable(scope.row)">
           </el-switch>
         </template>
       </el-table-column>
@@ -199,15 +198,20 @@
         return true;
       },
       chooseMainTable(item) {
-        console.log("chooseMainTable", item)
-        for (var table of this.tables) {
-          if (table.id == item.id) {
-            continue
-          } else {
-            table.isMain = false
+        console.log("chooseMainTable", item.in)
+        if (item.in == 0) {
+          alert('只有在其中的表可以设定为主表')
+          item.isMain = false
+        } else {
+          for (var table of this.tables) {
+            if (table.id == item.id) {
+              continue
+            } else {
+              table.isMain = false
+            }
           }
+          this.main_table_id = item.id
         }
-        this.main_table_id = item.id
       },
     },
     beforeMount() {
