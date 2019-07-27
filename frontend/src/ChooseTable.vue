@@ -35,12 +35,12 @@
             ref="multipleTable"
             :data="tables"
             tooltip-effect="dark"
-            style="width: 100%; font-size: 17px"
+            style="width: 100%; font-size: 15px"
             @selection-change="use_table">
       <el-table-column
               type="selection"
               style="margin-left:50px"
-              width="150">
+              width="100">
       </el-table-column>
       <el-table-column
               prop="fileName"
@@ -49,20 +49,33 @@
       <el-table-column
               v-if="operation === 'funnel'"
               label="是否在该表中"
-              width="300">
+              width="300"
+              fixed="right">
+        <template slot-scope="scope">
+          <el-radio-group
+                  v-model="scope.row.in">
+            <el-radio
+              :disabled="scope.row.hidden"
+              v-for="item in scope.row.radio_options"
+              :label="item.exist">
+              {{item.label}}</el-radio>
+          </el-radio-group>
+        </template>
+      </el-table-column>
+      <el-table-column
+              v-if="operation === 'funnel'"
+              label="是否为主表格"
+              width="150"
+              fixed="right">
         <template slot-scope="scope">
           <el-switch
-                  v-model="scope.row.in"
-                  :disabled="scope.row.hidden">
+                  v-model="scope.row.isMain"
+                  :disabled="scope.row.hidden"
+                  @change="chooseMainTable(scope.row)"
+                  >
           </el-switch>
         </template>
       </el-table-column>
-        <el-table-column
-                v-if="operation === 'funnel'"
-                label="选择主表格"
-                width="300"
-                fixed="right">
-        </el-table-column>
       <el-table-column
               v-if="operation === 'analyze'"
               label="要分析的列"
@@ -94,7 +107,8 @@
     data() {
       return {
         operation: "",
-        tables: []
+        tables: [],
+        main_table_id: '',
       };
     },
     methods: {
@@ -124,7 +138,7 @@
           for (var table of tables_used) {
             conditions.push({
               id: table.id,
-              exist: table.in
+              exist: table.in,
             });
           }
         } else if (this.operation === "diff") {
@@ -184,11 +198,23 @@
         }
         return true;
       },
+      chooseMainTable(item) {
+        console.log("chooseMainTable", item)
+        for (var table of this.tables) {
+          if (table.id == item.id) {
+            continue
+          } else {
+            table.isMain = false
+          }
+        }
+        this.main_table_id = item.id
+      },
     },
     beforeMount() {
       for (var i in this.tables) {
         this.tables[i].hidden = true;
         this.$set(this.tables[i], 'col_name', '')
+        this.$set(this.tables[i], 'isMain', false)
         this.tables[i].radio_options = [
           {
             exist: 1,

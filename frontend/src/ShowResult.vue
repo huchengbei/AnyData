@@ -51,9 +51,11 @@ export default {
         this.post_data.num = num;
       }
       var that = this;
+        console.log(this.post_data);
       axios.post("http://127.0.0.1:5000/funnel", this.post_data)
         .then(function(response) {
-          that.load_data(response.data)
+          that.load_data(response.data);
+          console.log(response);
         })
         .catch(function(error) {
           console.log(error);

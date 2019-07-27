@@ -67,7 +67,7 @@
                 <el-main>
                     <div id='main'></div>
                 </el-main>
-                <el-footer style="background: white; margin-bottom: 50px;">
+                <el-footer v-if="step != 4" style="background: white; margin-bottom: 50px;">
                     <el-button type="primary" @click="nextStep()">下一步</el-button>
                 </el-footer>
             </el-container>
@@ -192,6 +192,7 @@ export default {
             var post_data = {}
             post_data.start = 0;
             post_data.num = 10;
+            post_data.main_table_id = this.chooseTable.main_table_id;
             if (this.operation == 'funnel'){
                 post_data.condition = this.chooseTable.get_condition();
             }else if (this.operation == 'diff'){
