@@ -36,6 +36,18 @@ def slice_df(data, start, end):
     return data.head(end).tail(end-start)
 
 
+def is_digit(x):
+    if '0' <= x <= '9':
+        return True
+    return False
+
+
+def sfz_format(x):
+    s = x.replace('x', 'X')
+    print(s)
+    return x.replace('x', 'X')
+
+
 def check_records(infos):
     if len(infos[0]) is not len(infos[1]):
         return False

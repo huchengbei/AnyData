@@ -238,6 +238,7 @@ def get_all_rate(table_id):
 @app.route('/reset', methods=['POST'])
 def reset():
     app.tables = []
+    app.current_result = {}
     return 'success'
 
 
@@ -377,7 +378,8 @@ def get_funnel_data(condition, main_table_id):
 
     be_in = difference_safe(be_in, be_out)
     columns = fixed_table.get_column_list()
-    columns.remove('序号')
+    if '序号' in columns:
+        columns.remove('序号')
     result_all = fixed_table.get_list_by_list_columns(be_in, columns)
     index = pd.Series(range(1, len(result_all) + 1))
     index.rename('xh', inplace=True)

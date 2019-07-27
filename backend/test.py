@@ -112,4 +112,11 @@ def test10():
     print(columns.is_unique)
 
 
+def test11():
+    the_poor = Table('resources/the_poors.csv')
+    data = the_poor.data
+    xm = data['姓名']
+
+
+
 test10()

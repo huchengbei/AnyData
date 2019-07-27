@@ -2,6 +2,8 @@ import os
 
 import pandas as pd
 
+from util.functions import is_digit, sfz_format
+
 pd.set_option('display.max_columns', None)
 
 
@@ -52,11 +54,30 @@ class Table:
             return False
         else:
             self.main_key = main_key
+            self.sfz_map(main_key)
             self.data.index = self.data[self.main_key]
             # self.data = self.data.set_index(self.main_key, inplace=True)
             # self.data.set_index(self.main_key, inplace=True)
             self.index = set(self.data.index.tolist())
         return True
+
+    def sfz_map(self, col_name):
+        row1 = self.data[col_name][0]
+        status = True
+        for x in row1[0:17]:
+            if not is_digit(x):
+                status = False
+                break
+        if len(self.data[col_name]) > 1:
+            row2 = self.data[col_name][1]
+            for x in row2[0:17]:
+                if not is_digit(x):
+                    status = False
+                    break
+        print(self.data)
+        if status:
+            self.data[col_name] = self.data[col_name].map(lambda sfz: sfz_format(sfz))
+        print(self.data)
 
     def rename(self, *args, **kw):
         self.data = self.data.rename(*args, **kw)
