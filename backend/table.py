@@ -62,14 +62,14 @@ class Table:
         return True
 
     def sfz_map(self, col_name):
-        row1 = self.data[col_name][0]
+        row1 = self.data[col_name].iat[0]
         status = True
         for x in row1[0:17]:
             if not is_digit(x):
                 status = False
                 break
         if len(self.data[col_name]) > 1:
-            row2 = self.data[col_name][1]
+            row2 = self.data[col_name].iat[1]
             for x in row2[0:17]:
                 if not is_digit(x):
                     status = False
