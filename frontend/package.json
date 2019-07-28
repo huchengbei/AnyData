@@ -1,8 +1,8 @@
 {
-  "name": "EasyAnalyze",
-  "productName": "EasyAnalyze",
+  "name": "e分析",
+  "productname": "e分析",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "my electron application description",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -10,11 +10,11 @@
     "make": "electron-forge make",
     "make32": "electron-forge make --arch=ia32",
     "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\""
+    "lint": "echo \"no linting configured\""
   },
   "keywords": [],
   "author": "xeqia",
-  "license": "MIT",
+  "license": "mit",
   "config": {
     "forge": {
       "make_targets": {
@@ -29,21 +29,21 @@
           "rpm"
         ]
       },
-      "electronPackagerConfig": {
-        "packageManager": "npm"
+      "electronpackagerconfig": {
+        "packagemanager": "npm"
       },
-      "electronWinstallerConfig": {
-        "name": "EasyAnalyze",
+      "electronwinstallerconfig": {
+        "name": "e分析",
         "icon": "static/favicon.ico"
       },
-      "electronInstallerDebian": {},
-      "electronInstallerRedhat": {},
+      "electroninstallerdebian": {},
+      "electroninstallerredhat": {},
       "github_repository": {
         "owner": "",
         "name": ""
       },
-      "windowsStoreConfig": {
-        "packageName": "",
+      "windowsstoreconfig": {
+        "packagename": "",
         "name": "electronvue"
       }
     }
